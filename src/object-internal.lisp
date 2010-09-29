@@ -57,9 +57,10 @@ name HOOK."))
     (documentation (closer-mop:class-slots (class-of object)) type)))
 
 (defmethod print-object ((object object-hook) stream)
-  (with-slots ((object1 object) slot) object
+  (with-slots (slot) object
     (print-unreadable-object (object stream :type t :identity t)
-      (format stream "using slot ~A of ~A" slot object1))))
+      (format stream "~A (~A)"
+	      slot (length (hook-handlers object))))))
 
 
 ;;; Implementation of the Object Hook Protocol

@@ -48,6 +48,10 @@ objects."))
 (defmethod (setf hook-handlers) ((new-value list) (hook external-hook))
   (setf (slot-value hook 'handlers) new-value))
 
+(defmethod print-object ((object external-hook) stream)
+  (print-unreadable-object (object stream :type t :identity t)
+    (format stream "(~A)" (length (hook-handlers object)))))
+
 
 ;;; Implementation of the External Object Hook Protocol
 ;;
