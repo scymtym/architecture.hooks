@@ -1,0 +1,46 @@
+#+TITLE:  cl-hooks README
+#+AUTHOR: Jan Moringen
+#+EMAIL:  jmoringe@techfak.uni-bielefeld.de
+
+* Introduction
+  Consider the following example
+#+BEGIN_SRC lisp
+  (defvar *my-hook* nil)
+
+  (hooks:add-to-hook '*my-hook* (lambda (x)))
+
+  (hooks:run-hook '*my-hook* 1)
+#+END_SRC
+  Hooks can also live in other places like object slots:
+#+BEGIN_SRC lisp
+  (defclass my-class ()
+    ((my-hook :initarg  :my-hook
+              :type     listp
+              :initform nil)))
+
+  (defvar *my-object* (make-instance 'my-class))
+
+  (hooks:add-to-hook (hooks:object-hook *my-object* 'my-hook) (lambda (x)))
+
+  (hooks:run-hook (hooks:object-hook *my-object* 'my-hook) 1)
+#+END_SRC
+* Tracking State
+#+BEGIN_SRC lisp
+  (defmethod hooks:on-become-active :after ((hook t))
+    (format t "hook ~S is now active~%" hook))
+
+  (defmethod hooks:on-become-inactive :after ((hook t))
+    (format t "hook ~S is now inactive~%" hook))
+
+  (setf *my-object* (make-instance 'my-class))
+
+  (hooks:add-to-hook (hooks:object-hook *my-object* 'my-hook) (lambda (x)))
+
+  (setf (hooks:hook-handlers (hooks:object-hook *my-object* 'my-hook)) nil)
+#+END_SRC
+
+* settings							   :noexport:
+
+# Local Variables:
+# mode: org
+# End:
