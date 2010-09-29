@@ -40,9 +40,11 @@
 			      (:file "state"
 			       :depends-on ("package" "hook"))
 			      (:file "symbol"
-				     :depends-on ("package" "hook"))
-			      (:file "object"
-				     :depends-on ("package" "hook"))
+			       :depends-on ("package" "hook"))
+			      (:file "object-internal"
+			       :depends-on ("package" "hook"))
+			      (:file "object-external"
+			       :depends-on ("package" "hook"))
 			      (:file "macros"
 			       :depends-on ("package" "hook")))))
   :depends-on  (:alexandria

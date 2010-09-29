@@ -27,9 +27,11 @@
   (:export
    ;; Hook Protocol
    :hook-handlers :add-to-hook :remove-from-hook :run-hook
-   ;; Object
+   ;; Object Hook Protocol
    :object-hook
-   ;;
+   ;; External Hook Protocol
+   :external-hook
+   ;; State Tracking Protocol
    :on-become-active :on-become-inactive
    ;; Convenience Marcos
    :with-handlers))
