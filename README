@@ -3,26 +3,82 @@
 #+EMAIL:  jmoringe@techfak.uni-bielefeld.de
 
 * Introduction
-  Consider the following example
+  A hook, in the present context, is a certain kind of [[http://wikipedia.org/wiki/Extension_point][extension point]]
+  in a program that allows interleaving the execution of arbitrary
+  code with the execution of a the program without introducing any
+  coupling between the two.
+
+  In the Common LISP Object System, similar approaches are possible
+  using the flexible method dispatch mechanism. It may even seem that
+  the concept of hooks does not provide any benefits over the
+  possibilites of CLOS. However, there are some differences:
+  + There can be only one method for each combination of specializers
+    and qualifiers
+  + Removing code previously attached via a :before, :after or :around
+    method can be cumbersome
+  + There could be other or even multiple extension points
+    besides :before and :after in a single method
+  + Attaching codes to individual objects using eql specializers can
+    be cumbersome
+  + Introspection of code attached a particular extension point is
+    cumbersome since this requires enumerating and inspecting the
+    method of a generic function
+  This library tries to remedy some of these problems by introducing
+  the concept of hooks.
+
+* Hooks
+  Definition of a hook
+  + A name
+  + A list of handlers
+  + A ftype?
+  + Hook combination?
+
+  There are several kinds of hooks defined in this library, but new
+  kinds of hooks can easily be defined by adding methods to the
+  generic functions =hook-handlers= and =(setf hook-handlers)=.
+
+  The following sections briefly discuss the three kinds of hooks that
+  are currently defined in the library.
+** Variable Hooks
+   The most straightforward approach to implementing a hook is to
+   use a variable. The variable is used as followed
+   + Symbol Name :: name of the hook
+   + Symbol Value :: list of handlers currently attached to the hook
+
+   Consider the following example
 #+BEGIN_SRC lisp
   (defvar *my-hook* nil)
 
-  (hooks:add-to-hook '*my-hook* (lambda (x)))
+  (hooks:add-to-hook '*my-hook*
+                     (lambda (x)
+                       (format t "my-hook called with argument ~S~%" x)))
 
   (hooks:run-hook '*my-hook* 1)
 #+END_SRC
-  Hooks can also live in other places like object slots:
+** Internal Object Hooks
+   Hooks can also live in other places like object slots:
 #+BEGIN_SRC lisp
   (defclass my-class ()
     ((my-hook :initarg  :my-hook
-              :type     listp
+              :type     list
               :initform nil)))
 
   (defvar *my-object* (make-instance 'my-class))
 
-  (hooks:add-to-hook (hooks:object-hook *my-object* 'my-hook) (lambda (x)))
+  (hooks:add-to-hook (hooks:object-hook *my-object* 'my-hook)
+                     (lambda (x)
+                       (format t "my-hook called with argument ~S~%" x)))
 
   (hooks:run-hook (hooks:object-hook *my-object* 'my-hook) 1)
+#+END_SRC
+** External Object Hooks
+   Or outside of objects:
+#+BEGIN_SRC lisp
+  (hooks:add-to-hook (hooks:external-hook *my-object* 'my-external-hook)
+                     (lambda (x)
+                       (format t "my-external-hook called with argument ~S~%" x)))
+
+  (hooks:run-hook (hooks:external-hook *my-object* 'my-other-hook) 1)
 #+END_SRC
 * Tracking State
 #+BEGIN_SRC lisp
@@ -38,8 +94,19 @@
 
   (setf (hooks:hook-handlers (hooks:object-hook *my-object* 'my-hook)) nil)
 #+END_SRC
+* Convenience Marcos
+#+BEGIN_SRC lisp
+    (hooks:with-handlers
+        ((hooks:external-hook *my-object* 'my-hook)
+         (lambda (x))
+
+         (hooks:external-hook *my-object* 'my-other-hook)
+         (lambda (y z)))
+      (hooks:run-hook (hooks:external-hook *my-object* 'my-hook)))
+#+END_SRC
 
 * settings							   :noexport:
+#+LATEX_CLASS: scrartcl
 
 # Local Variables:
 # mode: org
