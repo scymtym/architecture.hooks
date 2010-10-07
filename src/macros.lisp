@@ -23,6 +23,25 @@
 ;;;
 ;;
 
+(defmacro define-hook-activation ((hook &key ((:var hook-var) (gensym)))
+				  activate deactivate)
+  "Execute [DE]ACTIVATE when HOOK becomes [in]active respectively.
+HOOK is a form that designates or retrieves a hook. Examples include a
+symbol designating a hook stored in that symbol or a form
+like (object-hook OBJECT HOOK-SYMBOL).
+Within the forms ACTIVATE and DEACTIVATE, the variable VAR (when
+specified) can be used to refer to the hook object (not HOOK, which is
+a form to retrieve the hook object)."
+  (once-only (hook)
+    `(progn
+       (defmethod on-become-active :after ((,hook-var (eql ,hook)))
+	 ,activate)
+       (defmethod on-become-inactive :after ((,hook-var (eql ,hook)))
+	 ,deactivate)
+
+       (when (hook-handlers ,hook)
+	 (on-become-active ,hook)))))
+
 (defmacro define-per-instance-activated-hook
     ((class hook
       &key
