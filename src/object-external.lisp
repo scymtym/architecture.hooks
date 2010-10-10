@@ -44,10 +44,25 @@ under the name HOOK."))
 		  :accessor hook-handlers
 		  :initform nil
 		  :documentation
-		  ""))
+		  "")
+   (documentation :initarg  :documentation
+		  :type     (or null string)
+		  :initform nil
+		  :documentation
+		  "Documentation string of the hook."))
   (:documentation
    "Instances of this class represent hooks that reside outside of
 objects."))
+
+(defmethod documentation ((hook external-hook) (type t))
+  (declare (ignore type))
+
+  (slot-value hook 'documentation))
+
+(defmethod (setf documentation) ((new-value string) (hook external-hook) (type t))
+  (declare (ignore type))
+
+  (setf (slot-value hook 'documentation) new-value))
 
 (defmethod print-object ((object external-hook) stream)
   (print-unreadable-object (object stream :type t :identity t)

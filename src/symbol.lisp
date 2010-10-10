@@ -34,3 +34,10 @@
 
 (defmethod (setf hook-handlers) ((new-value list) (hook symbol))
   (setf (symbol-value hook) new-value))
+
+(defmethod documentation ((hook symbol) (type (eql 'hook)))
+  (or (get hook 'hook-documentation)
+      (documentation hook 'variable)))
+
+(defmethod (setf documentation) ((new-value string) (hook symbol) (type (eql 'hook)))
+  (setf (get hook 'hook-documentation) new-value))

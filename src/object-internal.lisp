@@ -58,8 +58,19 @@ name HOOK."))
     (setf (slot-value object slot) new-value)))
 
 (defmethod documentation ((hook object-hook) (type t))
+  (declare (ignore type))
+
+  (bind (((:slots object slot) hook)
+	 (slot-object (find slot (closer-mop:class-slots (class-of object))
+			    :key #'closer-mop:slot-definition-name)))
+    (documentation slot-object t)))
+
+(defmethod (setf documentation) ((new-value string) (hook object-hook) (type t))
+  (declare (ignore type))
+
   (with-slots (object slot) hook
-    (documentation (closer-mop:class-slots (class-of object)) type)))
+    (setf (documentation (closer-mop:class-slots (class-of object)) t)
+	  new-value)))
 
 (defmethod print-object ((object object-hook) stream)
   (with-slots (slot) object

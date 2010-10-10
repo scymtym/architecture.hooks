@@ -50,7 +50,9 @@
 			      (:file "macros"
 			       :depends-on ("package" "hook")))))
   :depends-on  (:alexandria
-		:iterate)
+		:iterate
+		:metabang-bind
+		:closer-mop)
   :in-order-to ((test-op (test-op :cl-hooks-test))))
 
 (defsystem :cl-hooks-test
