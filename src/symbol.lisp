@@ -23,6 +23,12 @@
 ;;; Behavior for Symbols
 ;;
 
+(defmethod hook-combination ((hook symbol))
+  (get hook 'hook-combination 'cl:progn))
+
+(defmethod (setf hook-combination) ((new-value t) (hook symbol))
+  (setf (get hook 'hook-combination) new-value))
+
 (defmethod hook-handlers ((hook symbol))
   (symbol-value hook))
 

@@ -33,11 +33,17 @@ under the name HOOK."))
 ;;
 
 (defclass external-hook ()
-  ((handlers :initarg  :handlers
-	     :type     list
-	     :initform nil
-	     :documentation
-	     ""))
+  ((combination   :initarg  :combination
+		  :type     t
+		  :accessor hook-combination
+		  :initform 'cl:progn
+		  :documentation
+		  "")
+   (handlers      :initarg  :handlers
+		  :type     list
+		  :initform nil
+		  :documentation
+		  ""))
   (:documentation
    "Instances of this class represent hooks that reside outside of
 objects."))
@@ -50,7 +56,9 @@ objects."))
 
 (defmethod print-object ((object external-hook) stream)
   (print-unreadable-object (object stream :type t :identity t)
-    (format stream "(~A)" (length (hook-handlers object)))))
+    (format stream "~A (~A)"
+	    (hook-combination object)
+	    (length (hook-handlers object)))))
 
 
 ;;; Implementation of the External Object Hook Protocol

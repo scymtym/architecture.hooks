@@ -33,14 +33,19 @@ name HOOK."))
 ;;
 
 (defclass object-hook ()
-  ((object :initarg  :object
-	   :type     standard-object
-	   :documentation
-	   "The object in which the hook resides.")
-   (slot   :initarg  :slot
-	   :type     symbol
-	   :documentation
-	   "The slot in which the hook resides."))
+  ((object      :initarg  :object
+		:type     standard-object
+		:documentation
+		"The object in which the hook resides.")
+   (slot        :initarg  :slot
+		:type     symbol
+		:documentation
+		"The slot in which the hook resides.")
+   (combination :initarg  :combination
+		:accessor hook-combination
+		:initform 'cl:progn
+		:documentation
+		""))
   (:documentation
    "Instances of this class represent hooks that reside in object."))
 
@@ -59,8 +64,10 @@ name HOOK."))
 (defmethod print-object ((object object-hook) stream)
   (with-slots (slot) object
     (print-unreadable-object (object stream :type t :identity t)
-      (format stream "~A (~A)"
-	      slot (length (hook-handlers object))))))
+      (format stream "~A ~A (~A)"
+	      slot
+	      (hook-combination object)
+	      (length (hook-handlers object))))))
 
 
 ;;; Implementation of the Object Hook Protocol
