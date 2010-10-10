@@ -41,18 +41,13 @@ under the name HOOK."))
 		  "")
    (handlers      :initarg  :handlers
 		  :type     list
+		  :accessor hook-handlers
 		  :initform nil
 		  :documentation
 		  ""))
   (:documentation
    "Instances of this class represent hooks that reside outside of
 objects."))
-
-(defmethod hook-handlers ((hook external-hook))
-  (slot-value hook 'handlers))
-
-(defmethod (setf hook-handlers) ((new-value list) (hook external-hook))
-  (setf (slot-value hook 'handlers) new-value))
 
 (defmethod print-object ((object external-hook) stream)
   (print-unreadable-object (object stream :type t :identity t)
