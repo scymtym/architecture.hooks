@@ -35,8 +35,10 @@
   :description "Type definitions for hooks"
   :components  ((:module "src"
 		 :components ((:file "package")
-			      (:file "hook"
+			      (:file "conditions"
 			       :depends-on ("package"))
+			      (:file "hook"
+			       :depends-on ("package" "conditions"))
 			      (:file "state"
 			       :depends-on ("package" "hook"))
 			      (:file "symbol"

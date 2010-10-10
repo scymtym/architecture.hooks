@@ -25,6 +25,8 @@
    :alexandria
    :iterate)
   (:export
+   ;; Conditions
+   :hook-error :no-such-hook :duplicate-handler
    ;; Hook Protocol
    :hook-handlers :add-to-hook :remove-from-hook :run-hook
    ;; Object Hook Protocol
