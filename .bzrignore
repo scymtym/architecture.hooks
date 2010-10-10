@@ -1,1 +1,5 @@
 *.fasl
+*.html
+*.pdf
+*.tex
+auto
