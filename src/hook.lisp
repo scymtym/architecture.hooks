@@ -23,6 +23,14 @@
 ;;; Hook Protocol
 ;;
 
+(defgeneric hook-combination (hook)
+  (:documentation
+   "Return the hook combination used by HOOK."))
+
+(defgeneric (setf hook-combination) (new-value hook)
+  (:documentation
+   "Install NEW-VALUE as the hook combination used by HOOK."))
+
 (defgeneric hook-handlers (hook)
   (:documentation
    "Return a list of handlers attached to HOOK."))
@@ -47,9 +55,16 @@
   (:documentation
    "Run HOOK passing extra args ARGS to all handlers."))
 
+(defgeneric combine-results (hook combination results)
+  (:documentation
+   "Combine RESULTS of running HOOK's handlers according to COMBINATION."))
+
 
 ;;; Generic Implementation
 ;;
+
+(defmethod hook-combination ((hook t))
+  'cl:progn)
 
 (defmethod add-to-hook ((hook t) (handler function)
 			&key (duplicate-policy :replace))
@@ -93,5 +108,17 @@
   (setf (hook-handlers hook) nil))
 
 (defmethod run-hook ((hook t) &rest args)
-  (dolist (handler (hook-handlers hook))
-    (apply (the function handler) args)))
+  (combine-results
+   hook (hook-combination hook)
+   (iter (for handler in (hook-handlers hook))
+	 (collect (apply (the function handler) args)))))
+
+(defmethod combine-results ((hook t) (combination (eql 'cl:progn)) (results list))
+  (declare (ignore hook combination))
+
+  (lastcar results))
+
+(defmethod combine-results ((hook t) (combination function) (results list))
+  (declare (ignore hook))
+
+  (apply combination results))
