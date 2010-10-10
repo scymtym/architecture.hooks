@@ -39,6 +39,10 @@
   (:documentation
    "Remove HANDLER from HOOK."))
 
+(defgeneric clear-hook (hook)
+  (:documentation
+   "Remove all handlers from HOOK."))
+
 (defgeneric run-hook (hook &rest args)
   (:documentation
    "Run HOOK passing extra args ARGS to all handlers."))
@@ -84,6 +88,9 @@
 
 (defmethod remove-from-hook ((hook t) (handler function))
   (removef (hook-handlers hook) handler))
+
+(defmethod clear-hook ((hook t))
+  (setf (hook-handlers hook) nil))
 
 (defmethod run-hook ((hook t) &rest args)
   (dolist (handler (hook-handlers hook))
