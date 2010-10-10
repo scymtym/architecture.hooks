@@ -49,7 +49,7 @@ found."))
      (format stream "The handler ~S has already been added to the hook\
 ~S and the policy does not permit duplicate handlers"
 	     (hook-error-handler condition)
-	     (hook-error-hook    hook))))
+	     (hook-error-hook    condition))))
   (:documentation
    "This condition is signaled if a handler is added to a hook to
 which it has been added before and the policy does not permit handlers
