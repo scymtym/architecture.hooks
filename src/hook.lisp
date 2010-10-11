@@ -104,8 +104,9 @@
       ;; is already present, signal an error.
       (:error
        (when present?
-	 (error "Handler ~S already present and policy forbids adding a hook twice"
-		handler))
+	 (signal 'duplicate-handler
+		 :hook    hook
+		 :handler handler))
        (add-it handler nil)))))
 
 (defmethod remove-from-hook ((hook t) (handler function))
