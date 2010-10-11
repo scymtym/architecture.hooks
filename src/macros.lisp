@@ -68,18 +68,18 @@ a form to retrieve the hook object)."
 ;;;
 ;;
 
-(defmacro with-handlers (hooks &body body)
+(defmacro with-handlers (hooks-and-handlers &body body)
   ""
-  (let ((handlers)
-	(install-hooks)
-	(uninstall-hooks))
-    (iter (for (hook handler) in hooks)
-	  (let ((handler-var (gensym)))
-	    (push `(,handler-var (coerce ,handler 'function)) handlers)
-	    (push `(add-to-hook      ,hook ,handler-var) install-hooks)
-	    (push `(remove-from-hook ,hook ,handler-var) uninstall-hooks)))
-    `(let (,@handlers)
-       ,@install-hooks
-       (unwind-protect
-	    (progn ,@body)
-	 ,@uninstall-hooks))))
+  (iter (for (hook handler) in hooks-and-handlers)
+	(let ((handler-var (gensym)))
+	  (collect `(,handler-var (coerce ,handler 'function))
+	    :into handlers)
+	  (collect `(add-to-hook      ,hook ,handler-var)
+	    :into install-hooks)
+	  (collect `(remove-from-hook ,hook ,handler-var)
+	    :into uninstall-hooks))
+	(finally (return `(let (,@handlers)
+			    ,@install-hooks
+			    (unwind-protect
+				 (progn ,@body)
+			      ,@uninstall-hooks))))))
