@@ -77,9 +77,7 @@
   :in-order-to ((test-op (load-op :cl-hooks-test))))
 
 (defmethod perform ((op test-op) (system (eql (find-system :cl-hooks-test))))
-  (let* ((suite-name (find-symbol "ROOT" :hooks.test))
-	 (suite      (funcall (find-symbol "FIND-TESTSUITE" :lift) suite-name)))
-    (funcall (find-symbol "RUN-TESTS" :lift) :suite suite)))
+  (funcall (find-symbol "RUN-TESTS" :lift) :config :generic))
 
 
 ;;; Hooks and Bind System Connection
