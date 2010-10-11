@@ -30,7 +30,11 @@
   (setf (get hook 'hook-combination) new-value))
 
 (defmethod hook-handlers ((hook symbol))
-  (symbol-value hook))
+  (handler-case
+      (symbol-value hook)
+    (unbound-variable (condition)
+      (error 'no-such-hook
+	     :hook hook))))
 
 (defmethod (setf hook-handlers) ((new-value list) (hook symbol))
   (setf (symbol-value hook) new-value))
