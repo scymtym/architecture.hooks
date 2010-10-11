@@ -19,12 +19,18 @@
 
 (cl:in-package :cl-user)
 
+(asdf:load-system 'asdf-system-connections)
+
 (defpackage :cl-hooks-system
   (:use
    :cl
    :asdf))
 
 (in-package :cl-hooks-system)
+
+
+;;; Hooks and Associated Test System
+;;
 
 (defsystem :cl-hooks
   :name        "cl-hooks"
@@ -64,7 +70,7 @@
   :description "Tests for hooks"
   :components  ((:module "test"
 		 :components ((:file "package")
-			      (:file "hooks"
+			      (:file "bind"
 			       :depends-on ("package")))))
   :depends-on  (:cl-hooks
 		:lift)
@@ -74,3 +80,18 @@
   (let* ((suite-name (find-symbol "ROOT" :hooks.test))
 	 (suite      (funcall (find-symbol "FIND-TESTSUITE" :lift) suite-name)))
     (funcall (find-symbol "RUN-TESTS" :lift) :suite suite)))
+
+
+;;; Hooks and Bind System Connection
+;;
+
+(defsystem-connection :cl-hooks-and-bind
+  :name        "cl-hooks-and-bind"
+  :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
+  :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
+  :version     "0.0.1"
+  :license     "GPL3"
+  :description "TODO"
+  :requires    (cl-hooks metabang-bind)
+  :components  ((:module "src"
+		 :components ((:file "bind")))))
