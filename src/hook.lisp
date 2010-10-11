@@ -59,6 +59,13 @@
   (:documentation
    "Combine RESULTS of running HOOK's handlers according to COMBINATION."))
 
+;; Hook implementations should also supply
+
+(intern "HOOK")
+
+;; + documentation ((hook TYPE) (type (eql 'hook)))
+;; + (setf documentation) ((new-value t) (hook TYPE) (type (eql 'hook)))
+
 
 ;;; Generic Implementation
 ;;

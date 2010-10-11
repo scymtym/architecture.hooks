@@ -26,6 +26,8 @@
    :iterate
    :bind)
   (:export
+   ;; Documentation Type Symbol
+   :hook
    ;; Conditions
    :hook-error :no-such-hook :duplicate-handler
    ;; Hook Protocol
