@@ -38,13 +38,13 @@ under the name HOOK."))
 		  :accessor hook-combination
 		  :initform 'cl:progn
 		  :documentation
-		  "")
+		  "The hook combination used by this hook.")
    (handlers      :initarg  :handlers
 		  :type     list
 		  :accessor hook-handlers
 		  :initform nil
 		  :documentation
-		  "")
+		  "The list of handlers associated with this hook.")
    (documentation :initarg  :documentation
 		  :type     (or null string)
 		  :initform nil
@@ -76,11 +76,11 @@ objects."))
 
 (defmethod external-hook ((object standard-object) (hook symbol))
   (let* ((table  (or (get hook 'external-hook-objects)
-		    (setf (get hook 'external-hook-objects)
-			  (make-hash-table :test #'eq :weakness :key))))
+		     (setf (get hook 'external-hook-objects)
+			   (make-hash-table :test #'eq :weakness :key))))
 	 (result (gethash object table)))
     (if result
-      (values result t)
-      (values (setf (gethash object table)
-		    (make-instance 'external-hook))
-	      nil))))
+	(values result t)
+	(values (setf (gethash object table)
+		      (make-instance 'external-hook))
+		nil))))
