@@ -51,7 +51,13 @@ name HOOK."))
 
 (defmethod hook-handlers ((hook object-hook))
   (with-slots (object slot) hook
-    (slot-value object slot)))
+    (handler-case
+	(slot-value object slot)
+      (error (condition)             ;; the precise condition should
+	(declare (ignore condition)) ;; be something like (or
+	                             ;; missing-slot unbound-slot)
+	(error 'no-such-hook
+	       :hook `(object-hook ,object ,slot))))))
 
 (defmethod (setf hook-handlers) ((new-value list) (hook object-hook))
   (with-slots (object slot) hook
@@ -90,6 +96,14 @@ name HOOK."))
 			 (make-hash-table :test #'eq :weakness :key)))))
     (or (gethash object table)
 	(setf (gethash object table)
-	      (make-instance 'object-hook
-			     :object object
-			     :slot   hook)))))
+	      (progn
+		(handler-case
+		    (slot-value object hook)
+		  (error (condition)
+		    (declare (ignore condition))
+
+		    (error 'no-such-hook
+			   :hook `(object-hook ,object ,hook))))
+		(make-instance 'object-hook
+			       :object object
+			       :slot   hook))))))
