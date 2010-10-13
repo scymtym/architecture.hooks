@@ -70,6 +70,8 @@
   :description "Tests for hooks"
   :components  ((:module "test"
 		 :components ((:file "package")
+			      (:file "object-external"
+			       :depends-on ("package"))
 			      (:file "bind"
 			       :depends-on ("package")))))
   :depends-on  (:cl-hooks
