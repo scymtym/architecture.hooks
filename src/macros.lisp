@@ -69,7 +69,14 @@ a form to retrieve the hook object)."
 ;;
 
 (defmacro with-handlers (hooks-and-handlers &body body)
-  ""
+  "Run BODY with handlers as specified in HOOKS-AND-HANDLERS.
+HOOKS-AND-HANDLERS is a list of items of the form (HOOK HANDLER) where
+HOOK is a hook and HANDLER is coercable to a function.
+Example:
+\(with-handlers ((object-external object 'hook)
+                 (lambda (args)
+                  (format t \"~S~%\" args))
+  (do-something))"
   (iter (for (hook handler) in hooks-and-handlers)
 	(let ((handler-var (gensym)))
 	  (collect `(,handler-var (coerce ,handler 'function))
