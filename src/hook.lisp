@@ -115,18 +115,30 @@
 (defmethod clear-hook ((hook t))
   (setf (hook-handlers hook) nil))
 
+(defmethod run-hook :around ((hook t) &rest args)
+  (declare (ignore args))
+  (with-hook-restarts hook
+    (call-next-method)))
+
 (defmethod run-hook ((hook t) &rest args)
+  ;; Use hook combination to combine list of results and form return
+  ;; value.
   (combine-results
    hook (hook-combination hook)
+   ;; Run all handler with restarts and collect the results (if any).
    (iter (for handler in (hook-handlers hook))
-	 (collect (apply (the function handler) args)))))
+	 (let ((values (multiple-value-list
+			(apply #'run-handler-with-restarts
+			       handler args))))
+	   (when values
+	     (collect values))))))
 
 (defmethod combine-results ((hook t) (combination (eql 'cl:progn)) (results list))
   (declare (ignore hook combination))
 
-  (lastcar results))
+  (apply #'values (lastcar results)))
 
 (defmethod combine-results ((hook t) (combination function) (results list))
   (declare (ignore hook))
 
-  (apply combination results))
+  (apply combination (mapcar #'first results)))

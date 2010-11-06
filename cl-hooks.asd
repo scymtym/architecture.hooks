@@ -40,11 +40,13 @@
   :license     "GPL3"
   :description "Type definitions for hooks"
   :components  ((:module "src"
-		 :components ((:file "package")
+		 :components ((:file "package")(:file "util"
+			       :depends-on ("package"))
 			      (:file "conditions"
 			       :depends-on ("package"))
 			      (:file "hook"
-			       :depends-on ("package" "conditions"))
+			       :depends-on ("package" "util"
+					    "conditions"))
 			      (:file "state"
 			       :depends-on ("package" "hook"))
 			      (:file "symbol"
