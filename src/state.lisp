@@ -1,4 +1,4 @@
-;;; state.lisp ---
+;;; state.lisp --- Functionality for tracking the state of hooks.
 ;;
 ;; Copyright (C) 2010 Jan Moringen
 ;;
