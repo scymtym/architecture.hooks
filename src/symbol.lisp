@@ -33,6 +33,7 @@
   (handler-case
       (symbol-value hook)
     (unbound-variable (condition)
+      (declare (ignore condition))
       (error 'no-such-hook
 	     :hook hook))))
 
