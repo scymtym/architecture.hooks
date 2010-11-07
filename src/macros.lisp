@@ -95,8 +95,9 @@ Example:
   (do-something))"
   ;; Check wellformedness of hook-handler bindings.
   (let ((binding (find-if-not (curry #'length= 2) hooks-and-handlers)))
-    (error 'malformed-hook-handler-binding
-	   :binding binding))
+    (when binding
+      (error 'malformed-hook-handler-binding
+	     :binding binding)))
 
   ;; Process hook-handler bindings.
   (iter (for (hook handler) in hooks-and-handlers)
