@@ -73,11 +73,18 @@ a form to retrieve the hook object)."
 HOOKS-AND-HANDLERS is a list of items of the form (HOOK HANDLER) where
 HOOK is a hook and HANDLER is coercable to a function.
 Example:
-\(with-handlers ((object-external object 'hook)
-                 (lambda (args)
-                  (format t \"~S~%\" args))
+\(with-handlers (((object-external object 'hook)
+                  (lambda (args)
+                   (format t \"~S~%\" args))))
   (do-something))"
+  ;; Check wellformedness of hook-handler bindings.
+  (let ((binding (find-if-not (curry #'length= 2) hooks-and-handlers)))
+    (error 'malformed-hook-handler-binding
+	   :binding binding))
+
+  ;; Process hook-handler bindings.
   (iter (for (hook handler) in hooks-and-handlers)
+	;; Collect a handler, install form and uninstall form.
 	(let ((handler-var (gensym)))
 	  (collect `(,handler-var (coerce ,handler 'function))
 	    :into handlers)
@@ -85,6 +92,8 @@ Example:
 	    :into install-hooks)
 	  (collect `(remove-from-hook ,hook ,handler-var)
 	    :into uninstall-hooks))
+
+	;; Finally emit the code.
 	(finally (return `(let (,@handlers)
 			    ,@install-hooks
 			    (unwind-protect

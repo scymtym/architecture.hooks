@@ -54,3 +54,20 @@ found."))
    "This condition is signaled if a handler is added to a hook to
 which it has been added before and the policy does not permit handlers
 to be added to a hook multiple times."))
+
+
+;;; Conditions Related to Macros
+;;
+
+(define-condition malformed-hook-handler-binding (simple-error)
+  ((binding :initarg  :binding
+	    :reader   malformed-hook-handler-binding-binding
+	    :documentation
+	    "The invalid hook-handler binding."))
+  (:report
+   (lambda (condition stream)
+     (format stream "Malformed hook-handler binding ~S"
+	     (malformed-hook-handler-binding-binding condition))))
+  (:documentation
+   "This condition is signaled if an invalid hook-handler binding is
+detected during the expansion of an `with-handlers' macro."))
