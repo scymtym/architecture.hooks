@@ -1,3 +1,4 @@
+* TODO Order of handler should be controllable
 * DONE Bind integration
 #+BEGIN_SRC lisp
   (bind (((:handler (external-hook *my-object* 'my-hook) (state))
