@@ -1,4 +1,4 @@
-;;; bind.lisp ---
+;;; bind.lisp --- Integration of cl-hooks and bind systems.
 ;;
 ;; Copyright (C) 2010 Jan Moringen
 ;;
