@@ -23,6 +23,22 @@
 ;;; Activation Macros
 ;;
 
+(defmacro defhook (hook &key combination documentation)
+  "Instantiate HOOK and set COMBINATION and DOCUMENTATION."
+  (with-unique-names (hook-var)
+    `(let ((,hook-var ,hook))
+       ,@(when combination
+	   (list `(setf (hook-combination ,hook-var)
+			,combination)))
+       ,@(when documentation
+	   (list `(setf (documentation ,hook-var 'hook)
+			,documentation)))
+       ,hook-var)))
+
+
+;;;
+;;
+
 (defmacro define-hook-activation ((hook &key ((:var hook-var) (gensym)))
 				  activate deactivate)
   "Execute [DE]ACTIVATE when HOOK becomes [in]active respectively.
