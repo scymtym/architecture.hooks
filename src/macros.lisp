@@ -1,4 +1,4 @@
-;;; macros.lisp ---
+;;; macros.lisp --- Convenience macros of the cl-hooks system.
 ;;
 ;; Copyright (C) 2010 Jan Moringen
 ;;
@@ -20,7 +20,7 @@
 (in-package :hooks)
 
 
-;;;
+;;; Activation Macros
 ;;
 
 (defmacro define-hook-activation ((hook &key ((:var hook-var) (gensym)))
