@@ -25,5 +25,11 @@
 		  :docstring
 		  "Add a handler for the specified hook while the body
 executes.")
+  ;; Check wellformedness of variables.
+  (unless (and (alexandria:length= 2 variables)
+	       (listp (second variables)))
+    (error 'malformed-hook-handler-binding
+	   :binding variables))
+
   (destructuring-bind (hook lambda-list) variables
     `(hooks:with-handlers ((,hook #'(lambda ,lambda-list ,@values))))))
