@@ -1,53 +1,71 @@
 #+TITLE:  cl-hooks README
 #+AUTHOR: Jan Moringen
-#+EMAIL:  jmoringe@techfak.uni-bielefeld.de
+#+EMAIL:  jmoringe@techfak.uni-bielefeld.DE
 
+
+* Prelude							   :noexport:
+#+BEGIN_SRC lisp :session hooks
+  (asdf:load-system :cl-hooks)
+#+END_SRC
 * Introduction
   A hook, in the present context, is a certain kind of [[http://wikipedia.org/wiki/Extension_point][extension point]]
   in a program that allows interleaving the execution of arbitrary
   code with the execution of a the program without introducing any
-  coupling between the two.
+  coupling between the two. Hooks are used extensively in the
+  extensible editor [[http://gnu.org/software/emacs][Emacs]].
 
-  In the Common LISP Object System, similar approaches are possible
-  using the flexible method dispatch mechanism. It may even seem that
-  the concept of hooks does not provide any benefits over the
-  possibilites of CLOS. However, there are some differences:
+  In the Common LISP Object System (CLOS), a similar kind of
+  extensibility is possible using the flexible multi-method dispatch
+  mechanism. It may even seem that the concept of hooks does not
+  provide any benefits over the possibilites of CLOS. However, there
+  are some differences:
   + There can be only one method for each combination of specializers
-    and qualifiers
+    and qualifiers. As a result this kind of extension point cannot be
+    used by multiple extensions independently.
   + Removing code previously attached via a :before, :after or :around
-    method can be cumbersome
+    method can be cumbersome.
   + There could be other or even multiple extension points
-    besides :before and :after in a single method
+    besides :before and :after in a single method.
   + Attaching codes to individual objects using eql specializers can
-    be cumbersome
+    be cumbersome.
   + Introspection of code attached a particular extension point is
     cumbersome since this requires enumerating and inspecting the
-    method of a generic function
-  This library tries to remedy some of these problems by introducing
-  the concept of hooks.
+    methods of a generic function.
+  This library tries to complement some of these weaknesses of
+  method-based extension-points via the concept of hooks.
 
 * Hooks
-  Definition of a hook
-  + A name
-  + A list of handlers
-  + A ftype?
-  + Hook combination?
+** Definition
+   A hook is an extension point consisting of
+   + A name (a symbol or some form)
+   + A list of handlers
+   + ftype?
+   + A result combination
+   + A documentation string
 
-  There are several kinds of hooks defined in this library, but new
-  kinds of hooks can easily be defined by adding methods to the
-  generic functions =hook-handlers= and =(setf hook-handlers)=.
+   There are several kinds of hooks defined in this library, but new
+   kinds of hooks can easily be defined by adding methods to the
+   generic functions =hook-handlers=, =(setf hook-handlers)=,
+   =hook-combination=, =(setf hook-combination)=, =documentation= and
+   =(setf documentation)=.
 
-  The following sections briefly discuss the three kinds of hooks that
-  are currently defined in the library.
+   The following sections briefly discuss the three kinds of hooks that
+   are currently defined in the library.
+
+   Mention documentation
 ** Variable Hooks
    The most straightforward approach to implementing a hook is to
    use a variable. The variable is used as followed
    + Symbol Name :: name of the hook
    + Symbol Value :: list of handlers currently attached to the hook
+   + Symbol Documentation :: if no dedicated hook documentation is
+        installed using =(setf (hook-documentation ...) ...)=, the
+        documentation of the symbol as a variable is used
 
    Consider the following example
-#+BEGIN_SRC lisp
-  (defvar *my-hook* nil)
+#+BEGIN_SRC lisp :session hooks :exports both :results output
+  (defvar *my-hook* nil
+    "My hook is only run for educational purposes.")
 
   (hooks:add-to-hook '*my-hook*
                      (lambda (x)
@@ -55,33 +73,107 @@
 
   (hooks:run-hook '*my-hook* 1)
 #+END_SRC
+#+BEGIN_SRC lisp :session hooks :exports both :results value verbatim
+  (documentation '*my-hook* 'hooks::hook)
+#+END_SRC
+
 ** Internal Object Hooks
    Hooks can also live in other places like object slots:
-#+BEGIN_SRC lisp
+#+BEGIN_SRC lisp :session hooks :exports both :results output
   (defclass my-class ()
     ((my-hook :initarg  :my-hook
               :type     list
-              :initform nil)))
+              :initform nil
+              :documentation
+              "This hook bla bla")))
 
   (defvar *my-object* (make-instance 'my-class))
 
+  (hooks:object-hook *my-object* 'my-hook)
+#+END_SRC
+
+  Operation on an intern object hook work in the usual way:
+#+BEGIN_SRC lisp :session hooks :exports both :results output
   (hooks:add-to-hook (hooks:object-hook *my-object* 'my-hook)
                      (lambda (x)
                        (format t "my-hook called with argument ~S~%" x)))
 
+  (hooks:object-hook *my-object* 'my-hook)
+#+END_SRC
+#+BEGIN_SRC lisp :session hooks :exports both :results output
+  (format t "bla~%")
   (hooks:run-hook (hooks:object-hook *my-object* 'my-hook) 1)
+#+END_SRC
+  For object internal hooks, the documentation of the backing slot is
+  used as the hook's documentation:
+#+BEGIN_SRC lisp :session hooks :exports both :results value verbatim
+  (documentation (hooks:object-hook *my-object* 'my-hook) 'hooks::hook)
 #+END_SRC
 ** External Object Hooks
    Or outside of objects:
-#+BEGIN_SRC lisp
-  (hooks:add-to-hook (hooks:external-hook *my-object* 'my-external-hook)
+#+BEGIN_SRC lisp :session hooks :exports both :results value
+  (defparameter *external-hook* (hooks:external-hook *my-object* 'my-external-hook))
+
+  *external-hook*
+#+END_SRC
+  We stored the hook object in a variable since we are going to use it
+  in some other examples.
+#+BEGIN_SRC lisp :session hooks :exports both :results output
+  (hooks:add-to-hook *external-hook*
                      (lambda (x)
                        (format t "my-external-hook called with argument ~S~%" x)))
 
-  (hooks:run-hook (hooks:external-hook *my-object* 'my-other-hook) 1)
+  (hooks:run-hook *external-hook* 1)
 #+END_SRC
+** Hook Combination
+  Hook combination refers to the different possible way of
+  constructing the resulting value of running a hook. While bearing a
+  strong resemblance to method combination in CLOS namewise, hook
+  combination is a much more restricted and less powerful concept.
+
+  The default hook combination is =progn=:
+#+BEGIN_SRC lisp :session hooks :exports both :results output
+  (hooks:hook-combination (hooks:external-hook *my-object* 'my-external-hook))
+#+END_SRC
+  =progn= hook combination means the final result is the return value
+  of the handler run last:
+  TODO
+
+  Let's set up the hook to test some other combinations
+#+BEGIN_SRC lisp :session hooks :exports both :results output
+  (hooks:clear-hook *external-hook*)
+  (hooks:add-to-hook *external-hook* #'(lambda (x) (mod x 5)))
+  (hooks:add-to-hook *external-hook* #'(lambda (x) (- x)))
+#+END_SRC
+  + Combination using =list= ::
+#+BEGIN_SRC lisp  :session hooks :exports both :results output verbatim
+  (setf (hooks:hook-combination *external-hook*) #'list)
+
+  (list
+   (hooks:run-hook *external-hook* -3)
+   (hooks:run-hook *external-hook* 1)
+   (hooks:run-hook *external-hook* 7))
+#+END_SRC
+  + Combination using =max= ::
+#+BEGIN_SRC lisp  :session hooks :exports both :results output verbatim
+  (setf (hooks:hook-combination *external-hook*) #'max)
+
+  (list
+   (hooks:run-hook *external-hook* -3)
+   (hooks:run-hook *external-hook* 1)
+   (hooks:run-hook *external-hook* 7))
+#+END_SRC
+
+  *Note*:
+  #+BEGIN_QUOTE
+  Some functions can be used for hook combination, but will not work
+  as expected in all cases. =max= is one such examples. Running a hook
+  with =max= hook combination that does not have any handlers will
+  result in an error because =max= cannot be called without any
+  arguments (which is the result of calling zero handlers).
+  #+END_QUOTE
 * Tracking State
-#+BEGIN_SRC lisp
+#+BEGIN_SRC lisp :session hooks :exports both :results output
   (defmethod hooks:on-become-active :after ((hook t))
     (format t "hook ~S is now active~%" hook))
 
@@ -94,15 +186,33 @@
 
   (setf (hooks:hook-handlers (hooks:object-hook *my-object* 'my-hook)) nil)
 #+END_SRC
+* Restarts
+  This library uses restart to recover from errors during the
+  execution of hooks or their handlers. This section briefly discusses
+  the restarts that are installed at the hook and handler levels.
+** Hook Restarts
+   + =retry= :: When this restart is invoked, the hook is ran again.
+   + =use-value= :: When this restart is invoked, the hook is not ran
+	and a replacement value is read interactively and returned in
+	place of the result of running the hook.
+** Handler Restarts
+   + =retry= :: When this restart is invoked, the handler is executed
+        again.
+   + =use-value= :: When this restart is invoked, the handler is not
+        executed and a replacement value is read interactively and
+        returned in place of the result of executing the handler.
+   + =skip= :: When this restart is invoked, the handler is skipped
+        without producing any return value. If there are other
+        handlers, the hook may still produce a return value.
 * Convenience Marcos
 #+BEGIN_SRC lisp
-    (hooks:with-handlers
-        ((hooks:external-hook *my-object* 'my-hook)
-         (lambda (x))
+  (hooks:with-handlers
+      (((hooks:external-hook *my-object* 'my-hook)
+        (lambda (x)))
 
-         (hooks:external-hook *my-object* 'my-other-hook)
-         (lambda (y z)))
-      (hooks:run-hook (hooks:external-hook *my-object* 'my-hook)))
+       ((hooks:external-hook *my-object* 'my-other-hook)
+        (lambda (y z))))
+    (hooks:run-hook (hooks:external-hook *my-object* 'my-hook)))
 #+END_SRC
 
 * settings							   :noexport:
