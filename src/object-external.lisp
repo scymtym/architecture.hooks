@@ -33,7 +33,12 @@ under the name HOOK."))
 ;;
 
 (defclass external-hook ()
-  ((combination   :initarg  :combination
+  ((name          :initarg  :name
+		  :type     symbol
+		  :reader   hook-name
+		  :documentation
+		  "The name of this hook.")
+   (combination   :initarg  :combination
 		  :type     t
 		  :accessor hook-combination
 		  :initform 'cl:progn
@@ -66,7 +71,8 @@ objects."))
 
 (defmethod print-object ((object external-hook) stream)
   (print-unreadable-object (object stream :type t :identity t)
-    (format stream "~A (~A)"
+    (format stream "~A ~A (~A)"
+	    (hook-name object)
 	    (hook-combination object)
 	    (length (hook-handlers object)))))
 
@@ -82,5 +88,6 @@ objects."))
     (if result
 	(values result t)
 	(values (setf (gethash object table)
-		      (make-instance 'external-hook))
+		      (make-instance 'external-hook
+				     :name hook))
 		nil))))

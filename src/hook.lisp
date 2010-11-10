@@ -23,6 +23,10 @@
 ;;; Hook Protocol
 ;;
 
+(defgeneric hook-name (hook)
+  (:documentation
+   "Return the name of HOOK (a symbol)."))
+
 (defgeneric hook-combination (hook)
   (:documentation
    "Return the hook combination used by HOOK."))

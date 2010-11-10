@@ -32,7 +32,7 @@
    :hook-error :no-such-hook :duplicate-handler
    :malformed-hook-handler-binding
    ;; Hook Protocol
-   :hook-combination :hook-handlers
+   :hook-name :hook-combination :hook-handlers
    :add-to-hook :remove-from-hook :clear-hook
    :run-hook :combine-results
    ;; Object Hook Protocol
