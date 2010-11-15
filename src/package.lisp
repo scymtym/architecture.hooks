@@ -35,7 +35,7 @@
    ;; Hook Protocol
    :hook-name :hook-combination :hook-handlers
    :add-to-hook :remove-from-hook :clear-hook
-   :run-hook :combine-results
+   :run-hook :run-hook-fast :combine-results
    ;; Object Hook Protocol
    :object-hook
    ;; External Hook Protocol
