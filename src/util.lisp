@@ -26,6 +26,8 @@
   (force-output *query-io*)
   (list (read *query-io*)))
 
+(declaim (inline run-handler-with-restarts))
+
 (defun run-handler-with-restarts (handler &rest args)
   "Run HANDLER with ARGS after installing appropriate restarts.
 The installed restarts are:
