@@ -26,6 +26,12 @@
   (force-output *query-io*)
   (list (read *query-io*)))
 
+(declaim (inline run-handler-without-restarts))
+
+(defun run-handler-without-restarts (handler &rest args)
+  "Run HANDLER with ARGS."
+  (apply (the function handler) args))
+
 (declaim (inline run-handler-with-restarts))
 
 (defun run-handler-with-restarts (handler &rest args)
