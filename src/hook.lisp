@@ -138,6 +138,8 @@
 	   (when values
 	     (collect values))))))
 
+(declaim (inline run-hook-fast))
+
 (defun run-hook-fast (hook &rest args)
   "Run HOOK with ARGS like `run-hook', with the following differences:
 + do not run any methods installed on `run-hook'
