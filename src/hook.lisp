@@ -130,7 +130,7 @@
   ;; value.
   (combine-results
    hook (hook-combination hook)
-   ;; Run all handler with restarts and collect the results (if any).
+   ;; Run all handlers with restarts and collect the results (if any).
    (iter (for handler in (hook-handlers hook))
 	 (let ((values (multiple-value-list
 			(apply #'run-handler-with-restarts
