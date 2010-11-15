@@ -138,6 +138,17 @@
 	   (when values
 	     (collect values))))))
 
+(defun run-hook-fast (hook &rest args)
+  "Run HOOK with ARGS like `run-hook', with the following differences:
++ do not run any methods installed on `run-hook'
++ do not install any restarts
++ do not collect or combine any values returned by handlers."
+  (declare (optimize (speed 3) (safety 0) (debug 0)))
+  ;; Run all handlers without restarts.
+  (iter (for handler in (hook-handlers hook))
+	(apply #'run-handler-without-restarts handler args))
+  (values))
+
 (defmethod combine-results ((hook t) (combination (eql 'cl:progn)) (results list))
   (declare (ignore hook combination))
 

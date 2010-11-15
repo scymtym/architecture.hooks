@@ -29,6 +29,7 @@
 (declaim (inline run-handler-without-restarts))
 
 (defun run-handler-without-restarts (handler &rest args)
+  (declare (optimize (speed 3) (safety 0) (debug 0)))
   "Run HANDLER with ARGS."
   (apply (the function handler) args))
 
