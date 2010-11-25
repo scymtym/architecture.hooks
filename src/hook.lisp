@@ -81,7 +81,9 @@
 (defmethod add-to-hook ((hook t) (handler function)
 			&key (duplicate-policy :replace))
   (bind (((:flet add-it (handler present?))
-	  (values (push handler (hook-handlers hook)) present?))
+	  (values (progn (push handler (hook-handlers hook))
+			 handler)
+		  present?))
 	 (present? (when (member handler (hook-handlers hook)) t)))
     (ecase duplicate-policy
       ;; If HANDLER is already present, do nothing.
