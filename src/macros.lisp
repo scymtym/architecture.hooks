@@ -104,6 +104,28 @@ the hook object will be bound during the execution of BODY."
        (on-become-active ,hook-var))))
 
 
+;;; Activation Code for External Hooks
+;;
+
+(defmacro define-external-hook-activation ((name
+					    &key
+					    ((:object object-var) (gensym "OBJECT-VAR"))
+					    ((:hook   hook-var)   (gensym "HOOK-VAR"))
+					    (class                t))
+					   &body body)
+  "Execute BODY when the external hook named NAME becomes active.
+The keyword arguments object and hook can be used to name variables
+will be bound to the object and the hook object respectively during
+the execution of BODY."
+  `(defmethod external-hook :around ((,object-var ,class)
+				     (hook        (eql (quote ,name))))
+     ,(format nil "Add (de-)activation behavior to ~S for OBJECT." name)
+     (multiple-value-bind (,hook-var present?) (call-next-method)
+      (unless present?
+	,@body)
+      (values ,hook-var present?))))
+
+
 ;;;
 ;;
 

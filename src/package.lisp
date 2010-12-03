@@ -43,6 +43,6 @@
    ;; State Tracking Protocol
    :on-become-active :on-become-inactive
    ;; Convenience Marcos
-   :defhook :define-hook-activation
+   :defhook :define-hook-activation :define-external-hook-activation
    :define-hook-activation-method
    :with-handlers))
