@@ -95,7 +95,7 @@ name HOOK."))
   (let ((table (or (get hook 'hook-objects)
 		   (setf (get hook 'hook-objects)
 			 (make-hash-table :test #'eq :weakness :key)))))
-    (or (gethash object table)
+    (or (nth-value 0 (gethash object table))
 	(setf (gethash object table)
 	      (progn
 		(handler-case
