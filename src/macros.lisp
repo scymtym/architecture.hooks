@@ -40,7 +40,9 @@
 ;;;
 ;;
 
-(defmacro define-hook-activation ((hook &key ((:var hook-var) (gensym)))
+(defmacro define-hook-activation ((hook
+				   &key
+				   ((:var hook-var) (gensym "HOOK-VAR")))
 				  activate deactivate)
   "Execute [DE]ACTIVATE when HOOK becomes [in]active respectively.
 HOOK is a form that designates or retrieves a hook. Examples include a
