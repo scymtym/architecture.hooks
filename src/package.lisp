@@ -36,13 +36,19 @@
    :hook-name :hook-combination :hook-handlers
    :add-to-hook :remove-from-hook :clear-hook
    :run-hook :run-hook-fast :combine-results
+
    ;; Object Hook Protocol
    :object-hook
+
    ;; External Hook Protocol
    :external-hook
+
    ;; State Tracking Protocol
    :on-become-active :on-become-inactive
+
    ;; Convenience Marcos
-   :defhook :define-hook-activation :define-external-hook-activation
+   :defhook
+   :define-hook-activation
+   :define-internal-hook-activation :define-external-hook-activation
    :define-hook-activation-method
    :with-handlers))

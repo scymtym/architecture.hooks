@@ -78,30 +78,25 @@ the hook object will be bound during the execution of BODY."
 	(closer-mop:method-generic-function method) method))))
 
 
-;;;
+;;; Activation Code for Internal Hooks
 ;;
 
-(defmacro define-per-instance-activated-hook
-    ((class hook
-      &key
-      ((:instance instance-var) (gensym))
-      ((:hook     hook-var)     (gensym)))
-     activate deactivate)
-  ""
-  `(defmethod initialize-instance :around ((,instance-var ,class)
-					   &rest initargs)
-     (declare (ignore initargs))
-
-     (call-next-method)
-
-     (let ((,hook-var (object-hook ,instance-var (quote ,hook))))
-       (defmethod on-become-active :after ((hook (eql ,hook-var)))
+(defmacro define-internal-hook-activation ((class hook
+					    &key
+					    ((:instance instance-var) (gensym))
+					    ((:hook     hook-var)     (gensym)))
+					   activate deactivate)
+  "Execute ACTIVATE when internal HOOK of an instance of CLASS becomes
+active and execute DEACTIVATE when such a hook becomes inactive. The
+keyword arguments INSTANCE and HOOK can be used to name variables that
+will be bound to the instance and the hook object respectively during
+the execution of ACTIVATE and DEACTIVATE."
+  `(defmethod initialize-instance :after ((,instance-var ,class)
+					  &key)
+     (define-hook-activation ((object-hook ,instance-var (quote ,hook))
+			      :hook ,hook-var)
 	 ,activate)
-       (defmethod on-become-inactive :after ((hook (eql ,hook-var)))
-	 ,deactivate))
-
-     (when (hook-handlers ,hook-var)
-       (on-become-active ,hook-var))))
+     ,deactivate))
 
 
 ;;; Activation Code for External Hooks
