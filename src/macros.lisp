@@ -61,6 +61,26 @@ a form to retrieve the hook object)."
        (when (hook-handlers ,hook)
 	 (on-become-active ,hook)))))
 
+(defmacro define-hook-activation-method ((hook
+					  &key
+					  ((:var hook-var) (gensym "HOOK-VAR")))
+					 &body body)
+  "When HOOK becomes active, execute BODY which has to return a method
+object. When HOOK becomes inactive, the method is removed. The keyword
+argument VAR can be used to specify the name of a variable to which
+the hook object will be bound during the execution of BODY."
+  `(let ((method))
+     (define-hook-activation (,hook :var ,hook-var)
+	 ;; Activate
+	 (setf method (progn ,@body))
+       ;; Deactivate
+       (closer-mop::remove-method
+	(closer-mop:method-generic-function method) method))))
+
+
+;;;
+;;
+
 (defmacro define-per-instance-activated-hook
     ((class hook
       &key
