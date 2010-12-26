@@ -44,6 +44,8 @@
 			       :depends-on ("package"))
 			      (:file "conditions"
 			       :depends-on ("package"))
+			      (:file "mixin"
+			       :depends-on ("package"))
 			      (:file "hook"
 			       :depends-on ("package" "util"
 					    "conditions"))
