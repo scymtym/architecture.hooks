@@ -20,7 +20,7 @@
 
 (in-package :hooks)
 
-(define-condition hook-error (simple-error)
+(define-condition hook-error-mixin (error)
   ((hook :initarg  :hook
 	 :reader   hook-error-hook
 	 :documentation
@@ -29,7 +29,7 @@
    "This condition servers as a superclass for condition classes that
 are related to hooks."))
 
-(define-condition no-such-hook (hook-error)
+(define-condition no-such-hook (hook-error-mixin)
   ()
   (:report
    (lambda (condition stream)
@@ -39,7 +39,7 @@ are related to hooks."))
    "This condition is signaled when a designated hook cannot be
 found."))
 
-(define-condition duplicate-handler (hook-error)
+(define-condition duplicate-handler (hook-error-mixin)
   ((handler :initarg  :handler
 	    :type     function
 	    :reader   hook-error-handler
@@ -60,7 +60,7 @@ to be added to a hook multiple times."))
 ;;; Conditions Related to Macros
 ;;
 
-(define-condition malformed-hook-handler-binding (simple-error)
+(define-condition malformed-hook-handler-binding (error)
   ((binding :initarg  :binding
 	    :reader   malformed-hook-handler-binding-binding
 	    :documentation
