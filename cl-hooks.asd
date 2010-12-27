@@ -33,7 +33,6 @@
 ;;
 
 (defsystem :cl-hooks
-  :name        "cl-hooks"
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     "0.0.1"
@@ -66,7 +65,6 @@
   :in-order-to ((test-op (test-op :cl-hooks-test))))
 
 (defsystem :cl-hooks-test
-  :name        "cl-hooks-test"
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     "0.0.1"
