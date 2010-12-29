@@ -43,7 +43,7 @@
 			       :depends-on ("package"))
 			      (:file "conditions"
 			       :depends-on ("package"))
-			      (:file "mixin"
+			      (:file "mixins"
 			       :depends-on ("package"))
 			      (:file "hook"
 			       :depends-on ("package" "util"
@@ -53,9 +53,11 @@
 			      (:file "symbol"
 			       :depends-on ("package" "hook"))
 			      (:file "object-internal"
-			       :depends-on ("package" "hook"))
+			       :depends-on ("package" "hook"
+					    "mixins"))
 			      (:file "object-external"
-			       :depends-on ("package" "hook"))
+			       :depends-on ("package" "hook"
+					    "mixins"))
 			      (:file "macros"
 			       :depends-on ("package" "hook")))))
   :depends-on  (:alexandria
