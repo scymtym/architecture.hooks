@@ -1,6 +1,6 @@
 ;;; cl-hooks.asd ---
 ;;
-;; Copyright (C) 2010 Jan Moringen
+;; Copyright (C) 2010, 2011 Jan Moringen
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 ;;
@@ -90,7 +90,6 @@
 ;;
 
 (defsystem-connection :cl-hooks-and-bind
-  :name        "cl-hooks-and-bind"
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     "0.0.1"
