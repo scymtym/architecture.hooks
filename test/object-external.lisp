@@ -1,6 +1,6 @@
 ;;; object-external.lisp ---
 ;;
-;; Copyright (C) 2010 Jan Moringen
+;; Copyright (C) 2010, 2011 Jan Moringen
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 ;;
@@ -30,21 +30,24 @@
 	  "Test adding handlers to object external hooks.")
   add-to-hook
 
-  (let ((handler #'(lambda ())))
-    (multiple-value-bind (handlers present?)
-	(add-to-hook (external-hook object 'my-hook) handler)
-      (ensure-same (length handlers) 1)
+  (let ((hook    (external-hook object 'my-hook))
+	(handler #'(lambda ())))
+    (multiple-value-bind (added-handler present?)
+	(add-to-hook hook handler)
+      (ensure-same added-handler handler)
+      (ensure-same (length (hook-handlers hook)) 1)
       (ensure (not present?)
 	      :report "When adding a handler for the first time, the present? return value should be nil"))
 
-    (multiple-value-bind (handlers present?)
-	(add-to-hook (external-hook object 'my-hook) handler)
-      (ensure-same (length handlers) 1)
+    (multiple-value-bind (added-handler present?)
+	(add-to-hook hook handler)
+      (ensure-same added-handler handler)
+      (ensure-same (length (hook-handlers hook)) 1)
       (ensure present?
 	      :report "When adding a handler twice with :replace policy, the present? return value should be non-nil"))
 
     (ensure-condition duplicate-handler
-      (add-to-hook (external-hook object 'my-hook) handler
+      (add-to-hook hook handler
 		   :duplicate-policy :error))))
 
 (addtest (object-external
@@ -52,9 +55,10 @@
 	  "Test clearing object external hooks.")
   clear-hook
 
-  (add-to-hook (external-hook object 'my-hook) (lambda ()))
-  (add-to-hook (external-hook object 'my-hook) (lambda ()))
+  (let ((hook (external-hook object 'my-hook)))
+    (add-to-hook hook (lambda ()))
+    (add-to-hook hook (lambda ()))
 
-  (clear-hook (external-hook object 'my-hook))
-  (ensure-same (hook-handlers (external-hook object 'my-hook)) nil
-	       :report "Found remaining handlers after clearing the hook"))
+    (clear-hook hook)
+    (ensure-same (hook-handlers hook) nil
+		 :report "Found remaining handlers after clearing the hook")))
