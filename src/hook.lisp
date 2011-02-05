@@ -1,6 +1,6 @@
 ;;; hook.lisp --- Generic hook interface
 ;;
-;; Copyright (C) 2010 Jan Moringen
+;; Copyright (C) 2010, 2011 Jan Moringen
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 ;;
@@ -111,9 +111,9 @@
       ;; is already present, signal an error.
       (:error
        (when present?
-	 (signal 'duplicate-handler
-		 :hook    hook
-		 :handler handler))
+	 (error 'duplicate-handler
+		:hook    hook
+		:handler handler))
        (add-it handler nil)))))
 
 (defmethod remove-from-hook ((hook t) (handler function))
