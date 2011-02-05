@@ -1,6 +1,6 @@
 ;;; object-external.lisp --- Hooks that reside outside of objects
 ;;
-;; Copyright (C) 2010 Jan Moringen
+;; Copyright (C) 2010, 2011 Jan Moringen
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 ;;
@@ -50,7 +50,7 @@ objects."))
 ;;; Implementation of the External Object Hook Protocol
 ;;
 
-(defmethod external-hook ((object standard-object) (hook symbol))
+(defmethod external-hook ((object t) (hook symbol))
   (let* ((table  (or (get hook 'external-hook-objects)
 		     (setf (get hook 'external-hook-objects)
 			   (make-hash-table :test #'eq :weakness :key))))
