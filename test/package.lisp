@@ -1,6 +1,6 @@
 ;;; package.lisp --- Package for hooks unit tests
 ;;
-;; Copyright (C) 2010 Jan Moringen
+;; Copyright (C) 2010, 2011 Jan Moringen
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 ;;
@@ -27,12 +27,16 @@
    :hooks
    :lift)
   (:export
-   :root))
+   :root)
+  (:documentation
+   "This package contains the unit tests for cl-hooks system."))
 
 (in-package :hooks.test)
 
 (deftestsuite root ()
-  ())
+  ()
+  (:documentation
+   "Root unit test of the cl-hooks system."))
 
 
 ;;;
@@ -45,7 +49,11 @@
 	    :documentation
 	    ""))
   (:documentation
-   "DOC"))
+   "Instances of this class are used in unit tests for hooks which are
+stored in or associated to objects."))
 
 (deftestsuite object-hook-test (root)
-  ((object (make-instance 'hook-object))))
+  ((object (make-instance 'hook-object)))
+  (:documentation
+   "This class can be used as a superclass of test suites for hooks
+that store information in or associate information to objects."))
