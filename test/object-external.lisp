@@ -26,6 +26,19 @@
    "Tests for object-external hooks."))
 
 (addtest (object-external
+          :documentation
+	  "Ensure that retrieving a hook object twice yields `eq'
+  results.")
+  retrieval-stability
+
+  (ensure-same
+   (external-hook object 'my-hook)
+   (external-hook object 'my-hook)
+   :test   #'eq
+   :report    "Retrieving hook ~A twice should yield `eq' results, but did not."
+   :arguments ((external-hook object 'my-hook))))
+
+(addtest (object-external
 	  :documentation
 	  "Test adding handlers to object external hooks.")
   add-to-hook
