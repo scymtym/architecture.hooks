@@ -34,9 +34,10 @@
   (ensure-same
    (external-hook object 'my-hook)
    (external-hook object 'my-hook)
-   :test   #'eq
-   :report    "Retrieving hook ~A twice should yield `eq' results, but did not."
-   :arguments ((external-hook object 'my-hook))))
+   :test                    #'eq
+   :ignore-multiple-values? t
+   :report                  "Retrieving hook ~A twice should yield `eq' results, but did not."
+   :arguments               ((external-hook object 'my-hook))))
 
 (addtest (object-external
 	  :documentation
