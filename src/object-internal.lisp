@@ -1,6 +1,6 @@
 ;;; object.lisp --- Hooks that reside in objects
 ;;
-;; Copyright (C) 2010 Jan Moringen
+;; Copyright (C) 2010, 2011 Jan Moringen
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 ;;
@@ -33,7 +33,7 @@ name HOOK."))
 ;;; Object Hook Class
 ;;
 
-(defclass object-hook (internal-combination
+(defclass object-hook (internal-combination-mixin
 		       simple-printing-mixin)
   ((object :initarg  :object
 	   :type     standard-object
