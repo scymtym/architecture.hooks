@@ -47,7 +47,7 @@
 	    :type     list
 	    :initform nil
 	    :documentation
-	    ""))
+	    "Dummy slot for internal hooks."))
   (:documentation
    "Instances of this class are used in unit tests for hooks which are
 stored in or associated to objects."))

@@ -38,3 +38,15 @@ results.")
    :ignore-multiple-values? t
    :report                  "Retrieving hook ~A twice should yield `eq' results, but did not."
    :arguments               ((object-hook object 'my-hook))))
+
+(addtest (object-internal
+          :documentation
+	  "Test documentation retrieval.")
+  documentation
+
+  (ensure-same
+   (documentation (object-hook object 'my-hook) 'hook)
+   "Dummy slot for internal hooks."
+   :test #'string=
+   :report    "The documentation string associated to the hook is not correct."
+   :arguments ()))
