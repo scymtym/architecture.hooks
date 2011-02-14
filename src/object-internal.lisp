@@ -34,7 +34,7 @@ name HOOK."))
 ;;
 
 (defclass object-hook (internal-combination-mixin
-		       simple-printing-mixin)
+		       simple-printing-mixin
 		       activatable-mixin)
   ((object :initarg  :object
 	   :type     standard-object
