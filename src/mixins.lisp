@@ -1,6 +1,6 @@
 ;;; mixins.lisp --- Useful Mixin Classes for cl-hooks.
 ;;
-;; Copyright (C) 2010 Jan Moringen
+;; Copyright (C) 2010, 2011 Jan Moringen
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 ;;
@@ -91,3 +91,38 @@ hook."))
 	    (hook-name object)
 	    (hook-combination object)
 	    (length (hook-handlers object)))))
+
+
+;;; Activatable Mixin
+;;
+
+(defclass activatable-mixin ()
+  ((on-become-active   :initarg  on-become-active
+		       :type     (or null function)
+		       :initform nil
+		       :documentation
+		       "If a function is stored in this slot, the
+function is called when the hook becomes active. ")
+   (on-become-inactive :initarg   on-become-inactive
+		       :type     (or null function)
+		       :initform nil
+		       :documentation
+		       "If a function is stored in this slot, the
+function is called when the hook becomes inactive."))
+  (:documentation
+   "This mixin adds slot to functions which run when the hook becomes
+active or inactive."))
+
+(defmethod on-become-active ((hook activatable-mixin))
+  "If HOOK has a handler for becoming active installed, call that
+handler."
+  (let ((on-become-active (slot-value hook 'on-become-active)))
+    (when on-become-active
+      (funcall (the function on-become-active)))))
+
+(defmethod on-become-inactive ((hook activatable-mixin))
+  "If HOOK has a handler for becoming inactive installed, call that
+handler."
+  (let ((on-become-inactive (slot-value hook 'on-become-inactive)))
+    (when on-become-inactive
+      (funcall (the function on-become-inactive)))))

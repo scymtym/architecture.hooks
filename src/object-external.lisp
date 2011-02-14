@@ -36,7 +36,8 @@ under the name HOOK."))
 (defclass external-hook (internal-combination-mixin
 			 internal-handlers-mixin
 			 internal-documentation-mixin
-			 simple-printing-mixin)
+			 simple-printing-mixin
+			 activatable-mixin)
   ((name :initarg  :name
 	 :type     symbol
 	 :reader   hook-name

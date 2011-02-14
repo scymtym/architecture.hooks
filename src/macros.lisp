@@ -1,6 +1,6 @@
 ;;; macros.lisp --- Convenience macros of the cl-hooks system.
 ;;
-;; Copyright (C) 2010 Jan Moringen
+;; Copyright (C) 2010, 2011 Jan Moringen
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 ;;
@@ -43,7 +43,7 @@
 (defmacro define-hook-activation ((hook
 				   &key
 				   ((:var hook-var) (gensym "HOOK-VAR")))
-				  activate deactivate)
+				  activate &optional deactivate)
   "Execute [DE]ACTIVATE when HOOK becomes [in]active respectively.
 HOOK is a form that designates or retrieves a hook. Examples include a
 symbol designating a hook stored in that symbol or a form
@@ -51,15 +51,18 @@ like (object-hook OBJECT HOOK-SYMBOL).
 Within the forms ACTIVATE and DEACTIVATE, the variable VAR (when
 specified) can be used to refer to the hook object (not HOOK, which is
 a form to retrieve the hook object)."
-  (once-only (hook)
-    `(progn
-       (defmethod on-become-active :after ((,hook-var (eql ,hook)))
-	 ,activate)
-       (defmethod on-become-inactive :after ((,hook-var (eql ,hook)))
-	 ,deactivate)
+  `(let ((,hook-var ,hook))
+     ,@(when activate
+	 `((setf (slot-value ,hook-var 'on-become-active)
+		 #'(lambda ()
+		     ,activate))))
+     ,@(when deactivate
+	 `((setf (slot-value ,hook-var 'on-become-inactive)
+		 #'(lambda ()
+		     ,deactivate))))
 
-       (when (hook-handlers ,hook)
-	 (on-become-active ,hook)))))
+     (when (hook-handlers ,hook-var)
+       (on-become-active ,hook-var))))
 
 (defmacro define-hook-activation-method ((hook
 					  &key
