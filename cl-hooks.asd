@@ -19,7 +19,8 @@
 
 (cl:in-package :cl-user)
 
-(asdf:load-system 'asdf-system-connections)
+(when (asdf:find-system :asdf-system-connections)
+  (asdf:load-system :asdf-system-connections))
 
 (defpackage :cl-hooks-system
   (:use
@@ -93,6 +94,7 @@
 ;;; Hooks and Bind System Connection
 ;;
 
+#+asdf-system-connections
 (defsystem-connection :cl-hooks-and-bind
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
