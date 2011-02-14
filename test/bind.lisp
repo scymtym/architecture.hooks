@@ -1,6 +1,6 @@
-;;; bind.lisp ---
+;;; bind.lisp --- Unit tests for the bind integration of cl-hooks.
 ;;
-;; Copyright (C) 2010 Jan Moringen
+;; Copyright (C) 2010, 2011 Jan Moringen
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 ;;
