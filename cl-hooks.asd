@@ -35,8 +35,8 @@
 (defsystem :cl-hooks
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
-  :version     "0.0.1"
-  :license     "GPL3"
+  :version     "0.1.0"
+  :license     "LLGPL3 ; see LICENSE-LLGPL for details."
   :description "Type definitions for hooks"
   :components  ((:module "src"
 		 :components ((:file "package")(:file "util"
@@ -69,9 +69,9 @@
 (defsystem :cl-hooks-test
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
-  :version     "0.0.1"
-  :license     "GPL3"
-  :description "Tests for hooks"
+  :version     "0.1.0"
+  :license     "LLGPL3; see LICENSE-LLGPL for details."
+  :description "Unit tests for the cl-hooks system."
   :components  ((:module "test"
 		 :components ((:file       "package")
 			      (:file       "object-external"
@@ -96,9 +96,10 @@
 (defsystem-connection :cl-hooks-and-bind
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
-  :version     "0.0.1"
-  :license     "GPL3"
-  :description "TODO"
+  :version     "0.1.0"
+  :license     "LLGPL3; see LICENSE-LLGPL for details."
+  :description "System connection that provides a binding form that
+installs and uninstalls hook handlers around a form."
   :requires    (cl-hooks metabang-bind)
   :components  ((:module "src"
 		 :components ((:file "bind")))))
