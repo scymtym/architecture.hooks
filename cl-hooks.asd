@@ -39,6 +39,10 @@
   :version     "0.1.0"
   :license     "LLGPL3; see LICENSE-LLGPL for details."
   :description "Type definitions for hooks"
+  :depends-on  (:alexandria
+		:iterate
+		:metabang-bind
+		:closer-mop)
   :components  ((:module     "src"
 		 :components ((:file       "package")
 			      (:file       "util"
@@ -62,10 +66,6 @@
 					    "mixins"))
 			      (:file       "macros"
 			       :depends-on ("package" "hook")))))
-  :depends-on  (:alexandria
-		:iterate
-		:metabang-bind
-		:closer-mop)
   :in-order-to ((test-op (test-op :cl-hooks-test))))
 
 (defsystem :cl-hooks-test
@@ -74,6 +74,8 @@
   :version     "0.1.0"
   :license     "LLGPL3; see LICENSE-LLGPL for details."
   :description "Unit tests for the cl-hooks system."
+  :depends-on  (:cl-hooks
+		:lift)
   :components  ((:module     "test"
 		 :components ((:file       "package")
 			      (:file       "object-external"
@@ -84,8 +86,6 @@
 			       :depends-on ("package"))
 			      (:file       "bind"
 			       :depends-on ("package")))))
-  :depends-on  (:cl-hooks
-		:lift)
   :in-order-to ((test-op (load-op :cl-hooks-test))))
 
 (defmethod perform ((op test-op) (system (eql (find-system :cl-hooks-test))))
@@ -104,5 +104,5 @@
   :description "System connection that provides a binding form that
 installs and uninstalls hook handlers around a form."
   :requires    (cl-hooks metabang-bind)
-  :components  ((:module "src"
+  :components  ((:module     "src"
 		 :components ((:file "bind")))))
