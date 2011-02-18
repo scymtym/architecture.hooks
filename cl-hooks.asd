@@ -52,10 +52,11 @@
 			      (:file       "hook"
 			       :depends-on ("package" "util"
 					    "conditions"))
-			      (:file       "mixins"
-			       :depends-on ("package" "hook"))
 			      (:file       "state"
 			       :depends-on ("package" "hook"))
+			      (:file       "mixins"
+			       :depends-on ("package" "hook"
+					    "state"))
 			      (:file       "symbol"
 			       :depends-on ("package" "hook"))
 			      (:file       "object-internal"
