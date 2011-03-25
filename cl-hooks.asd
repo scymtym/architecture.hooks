@@ -79,6 +79,8 @@
 		:lift)
   :components  ((:module     "test"
 		 :components ((:file       "package")
+			      (:file       "symbol"
+			       :depends-on ("package"))
 			      (:file       "object-external"
 			       :depends-on ("package"))
 			      (:file       "object-internal"
