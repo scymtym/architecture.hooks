@@ -42,6 +42,26 @@
 ;;;
 ;;
 
+(deftestsuite hook-suite ()
+  ()
+  (:function
+   (exercise-hook-readers (hook)
+     (ensure
+      (typep (hook-name hook) 'symbol))
+
+     (ensure
+      (typep (documentation hook t) '(or null string)))
+
+     (ensure
+      (stringp (princ-to-string hook)))))
+
+  (:documentation
+   "Superclass for hook test suites."))
+
+
+;;;
+;;
+
 (defclass hook-object ()
   ((my-hook :initarg  :my-hook
 	    :type     list

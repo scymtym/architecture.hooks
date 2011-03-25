@@ -20,7 +20,8 @@
 
 (in-package :hooks.test)
 
-(deftestsuite object-external (object-hook-test)
+(deftestsuite object-external (object-hook-test
+			       hook-suite)
   ()
   (:documentation
    "Tests for object-external hooks."))
@@ -39,6 +40,13 @@
    :report                  "~@<Retrieving hook ~S twice should yield `eq' results, but ~
 did not.~@:>"
    :arguments               ((external-hook object 'my-hook))))
+
+(addtest (object-external
+          :documentation
+	  "Test readers of object external hooks")
+  readers
+
+  (exercise-hook-readers (external-hook object 'my-hook)))
 
 (addtest (object-external
 	  :documentation

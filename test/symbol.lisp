@@ -22,10 +22,18 @@
 (defvar *my-hook* nil
   "A hook for tests.")
 
-(deftestsuite symbol-root (root)
+(deftestsuite symbol-root (root
+			   hook-suite)
   ()
   (:documentation
    "Unit tests for symbol hooks."))
+
+(addtest (symbol-root
+          :documentation
+	  "Test readers of symbol hooks")
+  readers
+
+  (exercise-hook-readers '*my-hook*))
 
 (addtest (symbol-root
 	  :documentation

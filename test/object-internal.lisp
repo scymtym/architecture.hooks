@@ -20,10 +20,18 @@
 
 (in-package :hooks.test)
 
-(deftestsuite object-internal (object-hook-test)
+(deftestsuite object-internal (object-hook-test
+			       hook-suite)
   ()
   (:documentation
    "Tests for object-internal hooks."))
+
+(addtest (object-internal
+          :documentation
+	  "Test readers of object-internal hooks")
+  readers
+
+  (exercise-hook-readers (object-hook object 'my-hook)))
 
 (addtest (object-internal
           :documentation
