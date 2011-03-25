@@ -36,7 +36,8 @@
    (external-hook object 'my-hook)
    :test                    #'eq
    :ignore-multiple-values? t
-   :report                  "Retrieving hook ~A twice should yield `eq' results, but did not."
+   :report                  "~@<Retrieving hook ~S twice should yield `eq' results, but ~
+did not.~@:>"
    :arguments               ((external-hook object 'my-hook))))
 
 (addtest (object-external
@@ -51,14 +52,16 @@
       (ensure-same added-handler handler)
       (ensure-same (length (hook-handlers hook)) 1)
       (ensure (not present?)
-	      :report "When adding a handler for the first time, the present? return value should be nil"))
+	      :report "~@<When adding a handler for the first time, the ~
+present? return value should be nil.~@:>"))
 
     (multiple-value-bind (added-handler present?)
 	(add-to-hook hook handler)
       (ensure-same added-handler handler)
       (ensure-same (length (hook-handlers hook)) 1)
       (ensure present?
-	      :report "When adding a handler twice with :replace policy, the present? return value should be non-nil"))
+	      :report "~@<When adding a handler twice with :replace ~
+policy, the present? return value should be non-nil.~@:>"))
 
     (ensure-condition duplicate-handler
       (add-to-hook hook handler
@@ -75,4 +78,5 @@
 
     (clear-hook hook)
     (ensure-same (hook-handlers hook) nil
-		 :report "Found remaining handlers after clearing the hook")))
+		 :report "~@<Found remaining handlers after clearing the
+hook.~@:>")))
