@@ -29,7 +29,7 @@
 
 (addtest (symbol-root
 	  :documentation
-	  "Test adding handlers to symbol external hooks.")
+	  "Test adding handlers to symbol hooks.")
   add-to-hook
 
   (let ((hook    '*my-hook*)
@@ -56,7 +56,7 @@ policy, the present? return value should be non-nil.~@:>"))
 
 (addtest (symbol-root
 	  :documentation
-	  "Test clearing object external hooks.")
+	  "Test clearing symbol hooks.")
   clear-hook
 
   (let ((hook '*my-hook*))
