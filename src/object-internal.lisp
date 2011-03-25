@@ -42,6 +42,7 @@ name HOOK."))
 	   "The object in which the hook resides.")
    (slot   :initarg  :slot
 	   :type     symbol
+	   :reader   hook-name
 	   :documentation
 	   "The slot in which the hook resides."))
   (:documentation
