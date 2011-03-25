@@ -1,6 +1,6 @@
 ;;; symbol.lisp --- Hooks that reside in variables
 ;;
-;; Copyright (C) 2010 Jan Moringen
+;; Copyright (C) 2010, 2011 Jan Moringen
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 ;;
@@ -23,6 +23,9 @@
 
 ;;; Behavior for Symbols
 ;;
+
+(defmethod hook-name ((hook symbol))
+  hook)
 
 (defmethod hook-combination ((hook symbol))
   (get hook 'hook-combination 'cl:progn))
