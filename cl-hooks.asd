@@ -17,17 +17,15 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses>.
 
-(cl:in-package :cl-user)
-
-(when (asdf:find-system :asdf-system-connections)
-  (asdf:load-system :asdf-system-connections))
-
-(defpackage :cl-hooks-system
+(cl:defpackage :cl-hooks-system
   (:use
    :cl
    :asdf))
 
-(in-package :cl-hooks-system)
+(cl:in-package :cl-hooks-system)
+
+(when (asdf:find-system :asdf-system-connections nil)
+  (asdf:load-system :asdf-system-connections))
 
 
 ;;; Hooks and Associated Test System
@@ -67,6 +65,7 @@
 					    "mixins"))
 			      (:file       "macros"
 			       :depends-on ("package" "hook")))))
+
   :in-order-to ((test-op (test-op :cl-hooks-test))))
 
 (defsystem :cl-hooks-test
@@ -106,6 +105,7 @@
   :license     "LLGPL3; see LICENSE-LLGPL for details."
   :description "System connection that provides a binding form that
 installs and uninstalls hook handlers around a form."
-  :requires    (cl-hooks metabang-bind)
+  :requires    (cl-hooks
+		metabang-bind)
   :components  ((:module     "src"
 		 :components ((:file "bind")))))
