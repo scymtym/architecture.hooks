@@ -70,9 +70,9 @@ name HOOK."))
 			    :key #'closer-mop:slot-definition-name)))
     (documentation slot-object t)))
 
-(defmethod (setf documentation) ((new-value string) (hook object-hook) (type t))
-  (declare (ignore type))
-
+(defmethod (setf documentation) ((new-value string)
+				 (hook      object-hook)
+				 (type      t))
   (with-slots (object slot) hook
     (setf (documentation (closer-mop:class-slots (class-of object)) t)
 	  new-value)))

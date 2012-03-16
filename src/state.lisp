@@ -38,8 +38,6 @@
 
 (defmethod (setf hook-handlers) :around ((new-value list) (hook t))
   "Check whether HOOK becomes active or inactive."
-  (declare (ignore new-value))
-
   (let ((was-empty?     (null (hook-handlers hook)))
 	(will-be-empty? (null new-value))
 	(result         (call-next-method)))
@@ -52,10 +50,8 @@
 
 (defmethod on-become-active ((hook t))
   "Default behavior is to do nothing."
-  (declare (ignore hook))
   (values))
 
 (defmethod on-become-inactive ((hook t))
   "Default behavior is to do nothing."
-  (declare (ignore hook))
   (values))

@@ -52,13 +52,8 @@ objects."))
 ;;
 
 (defmethod external-hook ((object t) (hook symbol))
-  (let* ((table  (or (get hook 'external-hook-objects)
-		     (setf (get hook 'external-hook-objects)
-			   (make-hash-table :test #'eq :weakness :key))))
-	 (result (gethash object table)))
-    (if result
-	(values result t)
-	(values (setf (gethash object table)
-		      (make-instance 'external-hook
-				     :name hook))
-		nil))))
+  (let ((table (or (get hook 'external-hook-objects)
+		   (setf (get hook 'external-hook-objects)
+			 (make-hash-table :test #'eq :weakness :key)))))
+    (ensure-gethash object table (make-instance 'external-hook
+						:name hook))))

@@ -80,22 +80,20 @@
 
 (defmethod add-to-hook ((hook t) (handler function)
 			&key (duplicate-policy :replace))
-  (bind (((:flet add-it (handler present?))
-	  (values (progn (push handler (hook-handlers hook))
-			 handler)
-		  present?))
-	 (present? (when (member handler (hook-handlers hook)) t)))
+  (bind ((present? (member handler (hook-handlers hook)))
+	 ((:flet add-it ())
+	  (push handler (hook-handlers hook))))
     (ecase duplicate-policy
       ;; If HANDLER is already present, do nothing.
       (:do-nothing
        (if present?
 	   (values (hook-handlers hook) t)
-	   (add-it handler nil)))
+	   (values (add-it) nil)))
 
       ;; Add HANDLER, regardless of whether it is already present or
       ;; not.
       (:add
-       (add-it handler present?))
+       (values (add-it) present?))
 
       ;; If HANDLER is already present, replace it. This has the
       ;; effect of moving HANDLER into the position of the most
@@ -105,7 +103,7 @@
 	 ;; Do not use remove-from-hook to avoid running possibly
 	 ;; attached behavior.
 	 (removef (hook-handlers hook) handler))
-       (add-it handler present?))
+       (values (add-it) present?))
 
       ;; When adding the same handler twice is not allowed and HANDLER
       ;; is already present, signal an error.
@@ -114,7 +112,7 @@
 	 (error 'duplicate-handler
 		:hook    hook
 		:handler handler))
-       (add-it handler nil)))))
+       (values (add-it) nil)))))
 
 (defmethod remove-from-hook ((hook t) (handler function))
   (removef (hook-handlers hook) handler))
@@ -128,17 +126,16 @@
     (call-next-method)))
 
 (defmethod run-hook ((hook t) &rest args)
-  ;; Use hook combination to combine list of results and form return
-  ;; value.
+  ;; Use hook combination to combine the list of results and form the
+  ;; return value.
   (combine-results
    hook (hook-combination hook)
    ;; Run all handlers with restarts and collect the results (if any).
    (iter (for handler in (hook-handlers hook))
-	 (let ((values (multiple-value-list
-			(apply #'run-handler-with-restarts
-			       handler args))))
-	   (when values
-	     (collect values))))))
+	 (when-let ((values (multiple-value-list
+			     (apply #'run-handler-with-restarts
+				    handler args))))
+	   (collect values)))))
 
 (declaim (inline run-hook-fast))
 
@@ -153,12 +150,12 @@
 	(apply #'run-handler-without-restarts handler args))
   (values))
 
-(defmethod combine-results ((hook t) (combination (eql 'cl:progn)) (results list))
-  (declare (ignore hook combination))
-
+(defmethod combine-results ((hook        t)
+			    (combination (eql 'cl:progn))
+			    (results     list))
   (apply #'values (lastcar results)))
 
-(defmethod combine-results ((hook t) (combination function) (results list))
-  (declare (ignore hook))
-
+(defmethod combine-results ((hook        t)
+			    (combination function)
+			    (results     list))
   (apply combination (mapcar #'first results)))

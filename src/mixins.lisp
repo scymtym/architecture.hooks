@@ -116,13 +116,11 @@ active or inactive."))
 (defmethod on-become-active ((hook activatable-mixin))
   "If HOOK has a handler for becoming active installed, call that
 handler."
-  (let ((on-become-active (slot-value hook 'on-become-active)))
-    (when on-become-active
-      (funcall (the function on-become-active)))))
+  (when-let ((on-become-active (slot-value hook 'on-become-active)))
+    (funcall (the function on-become-active))))
 
 (defmethod on-become-inactive ((hook activatable-mixin))
   "If HOOK has a handler for becoming inactive installed, call that
 handler."
-  (let ((on-become-inactive (slot-value hook 'on-become-inactive)))
-    (when on-become-inactive
-      (funcall (the function on-become-inactive)))))
+  (when-let ((on-become-inactive (slot-value hook 'on-become-inactive)))
+    (funcall (the function on-become-inactive))))
