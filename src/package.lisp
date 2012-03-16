@@ -1,6 +1,6 @@
 ;;; package.lisp --- Package definition for the hook library.
 ;;
-;; Copyright (C) 2010 Jan Moringen
+;; Copyright (C) 2010, 2011, 2012 Jan Moringen
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 ;;
@@ -18,9 +18,7 @@
 ;; License along with this program. If not, see
 ;; <http://www.gnu.org/licenses>.
 
-(cl:in-package :cl-user)
-
-(defpackage :hooks
+(cl:defpackage :hooks
   (:use
    :cl
    :alexandria

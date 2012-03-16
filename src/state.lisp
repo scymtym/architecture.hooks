@@ -1,6 +1,6 @@
 ;;; state.lisp --- Functionality for tracking the state of hooks.
 ;;
-;; Copyright (C) 2010 Jan Moringen
+;; Copyright (C) 2010, 2011, 2012 Jan Moringen
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 ;;
@@ -18,7 +18,7 @@
 ;; License along with this program. If not, see
 ;; <http://www.gnu.org/licenses>.
 
-(in-package :hooks)
+(cl:in-package :hooks)
 
 
 ;;; Hook Activity Tracking Protocol

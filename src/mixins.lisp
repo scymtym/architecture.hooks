@@ -1,6 +1,6 @@
 ;;; mixins.lisp --- Useful Mixin Classes for cl-hooks.
 ;;
-;; Copyright (C) 2010, 2011 Jan Moringen
+;; Copyright (C) 2010, 2011, 2012 Jan Moringen
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 ;;
@@ -17,7 +17,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses>.
 
-(in-package :hooks)
+(cl:in-package :hooks)
 
 
 ;;; Internal Combination Mixin

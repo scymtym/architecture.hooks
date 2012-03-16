@@ -1,6 +1,6 @@
 ;;; package.lisp --- Package for hooks unit tests
 ;;
-;; Copyright (C) 2010, 2011 Jan Moringen
+;; Copyright (C) 2010, 2011, 2012 Jan Moringen
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 ;;
@@ -18,9 +18,7 @@
 ;; License along with this program. If not, see
 ;; <http://www.gnu.org/licenses>.
 
-(cl:in-package :cl-user)
-
-(defpackage :hooks.test
+(cl:defpackage :hooks.test
   (:use
    :cl
    :bind
@@ -31,7 +29,7 @@
   (:documentation
    "This package contains the unit tests for cl-hooks system."))
 
-(in-package :hooks.test)
+(cl:in-package :hooks.test)
 
 (deftestsuite root ()
   ()

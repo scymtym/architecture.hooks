@@ -1,6 +1,6 @@
 ;;; object-external.lisp ---
 ;;
-;; Copyright (C) 2010, 2011 Jan Moringen
+;; Copyright (C) 2010, 2011, 2012 Jan Moringen
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 ;;
@@ -18,7 +18,7 @@
 ;; License along with this program. If not, see
 ;; <http://www.gnu.org/licenses>.
 
-(in-package :hooks.test)
+(cl:in-package :hooks.test)
 
 (deftestsuite object-external (object-hook-test
 			       hook-suite)
