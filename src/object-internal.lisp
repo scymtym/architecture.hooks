@@ -77,9 +77,10 @@ name HOOK."))
 (defmethod (setf documentation) ((new-value string)
 				 (hook      object-hook)
 				 (type      t))
-  (with-slots (object slot) hook
-    (setf (documentation (closer-mop:class-slots (class-of object)) t)
-	  new-value)))
+  (bind (((:slots object slot) hook)
+	 (slot-object (find slot (closer-mop:class-slots (class-of object))
+			    :key #'closer-mop:slot-definition-name)))
+    (setf (documentation slot-object t) new-value)))
 
 
 ;;; Implementation of the Object Hook Protocol
