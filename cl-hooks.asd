@@ -1,4 +1,4 @@
-;;; cl-hooks.asd ---
+;;; cl-hooks.asd --- System definition for cl-hooks system.
 ;;
 ;; Copyright (C) 2010, 2011, 2012 Jan Moringen
 ;;
@@ -34,47 +34,42 @@
 (defsystem :cl-hooks
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
-  :version     "0.1.0"
-  :license     "LLGPL3; see LICENSE-LLGPL for details."
-  :description "Type definitions for hooks"
+  :version     "0.2.0"
+  :license     "LLGPLv3; see LICENSE-LLGPL for details."
+  :description "This system provides the hooks extension point
+mechanism (as known, e.g., from GNU Emacs)."
   :depends-on  (:alexandria
 		:iterate
 		:metabang-bind
 		:closer-mop)
-  :components  ((:module     "src"
+  :components  ((:module     "src/early"
+		 :pathname   "src"
+		 :serial     t
 		 :components ((:file       "package")
-			      (:file       "protocol"
-			       :depends-on ("package"))
-			      (:file       "util"
-			       :depends-on ("package"))
-			      (:file       "conditions"
-			       :depends-on ("package"))
-			      (:file       "hook"
-			       :depends-on ("package" "util"
-					    "conditions" "protocol"))
-			      (:file       "state"
-			       :depends-on ("package" "hook"))
+			      (:file       "conditions")
+			      (:file       "protocol")
+			      (:file       "util")))
+
+		(:module     "src"
+		 :depends-on ("src/early")
+		 :components ((:file       "hook")
+			      (:file       "state")
 			      (:file       "mixins"
-			       :depends-on ("package" "hook"
-					    "state"))
-			      (:file       "symbol"
-			       :depends-on ("package" "hook"))
+			       :depends-on ("state"))
+			      (:file       "symbol")
 			      (:file       "object-internal"
-			       :depends-on ("package" "hook"
-					    "mixins"))
+			       :depends-on ("mixins"))
 			      (:file       "object-external"
-			       :depends-on ("package" "hook"
-					    "mixins"))
-			      (:file       "macros"
-			       :depends-on ("package" "hook")))))
+			       :depends-on ("mixins"))
+			      (:file       "macros"))))
 
   :in-order-to ((test-op (test-op :cl-hooks-test))))
 
 (defsystem :cl-hooks-test
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
-  :version     "0.1.0"
-  :license     "LLGPL3; see LICENSE-LLGPL for details."
+  :version     "0.2.0"
+  :license     "LLGPLv3; see LICENSE-LLGPL for details."
   :description "Unit tests for the cl-hooks system."
   :depends-on  (:cl-hooks
 		:lift)
@@ -89,8 +84,7 @@
 			      (:file       "state"
 			       :depends-on ("package"))
 			      (:file       "bind"
-			       :depends-on ("package")))))
-  :in-order-to ((test-op (load-op :cl-hooks-test))))
+			       :depends-on ("package"))))))
 
 (defmethod perform ((op test-op) (system (eql (find-system :cl-hooks-test))))
   (funcall (find-symbol "RUN-TESTS" :lift) :config :generic))
@@ -103,11 +97,11 @@
 (defsystem-connection :cl-hooks-and-bind
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
-  :version     "0.1.0"
-  :license     "LLGPL3; see LICENSE-LLGPL for details."
+  :version     "0.2.0"
+  :license     "LLGPLv3; see LICENSE-LLGPL for details."
   :description "System connection that provides a binding form that
 installs and uninstalls hook handlers around a form."
   :requires    (cl-hooks
 		metabang-bind)
-  :components  ((:module     "src"
-		 :components ((:file "bind")))))
+  :components  ((:file       "bind"
+		 :pathname   "src/bind")))
