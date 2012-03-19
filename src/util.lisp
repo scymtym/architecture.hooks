@@ -53,7 +53,7 @@ The installed restarts are:
 	   :report
 	   (lambda (stream)
 	     (format stream
-		     "Retry running handler ~S." handler))
+		     "~@<Retry running handler ~S.~:@>" handler))
 	   (go :retry))
 
 	 ;; Skip the handler.
@@ -61,14 +61,15 @@ The installed restarts are:
 	   :report
 	   (lambda (stream)
 	     (format stream
-		     "Skip handler ~S." handler)))
+		     "~@<Skip handler ~S.~:@>" handler)))
 
 	 ;; Use a replacement value.
 	 (use-value (value)
 	   :report
 	   (lambda (stream)
 	     (format stream
-		     "Specify a value instead of running handler ~S."
+		     "~@<Specify a value to be used instead of the ~
+result of running handler ~S.~:@>"
 		     handler))
 	   :interactive read-value
 	   (setf result (list value)))))
