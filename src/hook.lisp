@@ -79,10 +79,12 @@
   'cl:progn)
 
 (defmethod add-to-hook ((hook t) (handler function)
-			&key (duplicate-policy :replace))
+			&key
+			(duplicate-policy :replace))
   (bind ((present? (member handler (hook-handlers hook)))
 	 ((:flet add-it ())
-	  (push handler (hook-handlers hook))))
+	  (push handler (hook-handlers hook))
+	  handler))
     (ecase duplicate-policy
       ;; If HANDLER is already present, do nothing.
       (:do-nothing
