@@ -24,30 +24,84 @@
    :alexandria
    :iterate
    :bind)
+
+  ;; Documentation Type Symbol
   (:export
-   ;; Documentation Type Symbol
-   :hook
-   ;; Conditions
-   :hook-error :no-such-hook :duplicate-handler
-   :malformed-hook-handler-binding
-   ;; Hook Protocol
-   :hook-name :hook-combination :hook-handlers
-   :add-to-hook :remove-from-hook :clear-hook
-   :run-hook :run-hook-fast :combine-results
+   :hook)
 
-   ;; Object Hook Protocol
+  ;; Conditions
+  (:export
+   :hook-error
+
+   :no-such-hook
+
+   :duplicate-handler
+
+   :malformed-hook-handler-binding)
+
+  ;; Hook Protocol
+  (:export
+   :hook-name
+   :hook-combination
+   :hook-handlers
+
+   :add-to-hook
+   :remove-from-hook
+   :clear-hook
+
+   :run-hook
+   :run-hook-fast
+
+   :combine-results)
+
+  ;; State Tracking Protocol
+  (:export
+   :on-become-active
+   :on-become-inactive)
+
+  ;; Object Hook Protocol
+  (:export
+
    :object-hook
-   :hook-object
+   :hook-object)
 
-   ;; External Hook Protocol
-   :external-hook
+  ;; External Hook Protocol
+  (:export
+   :external-hook)
 
-   ;; State Tracking Protocol
-   :on-become-active :on-become-inactive
-
-   ;; Convenience Marcos
+  ;; Convenience Marcos
+  (:export
    :defhook
+
    :define-hook-activation
-   :define-internal-hook-activation :define-external-hook-activation
+
+   :define-internal-hook-activation
+   :define-external-hook-activation
+
    :define-hook-activation-method
-   :with-handlers))
+
+   :with-handlers)
+
+  (:documentation
+   "This package contains functions and classes which implement the
+\"hook\" extension point mechanism as known, for example, from GNU
+Emacs.
+
+Hooks are first-class objects which can be inspected and modified via
+accessors:
+
++ `hook-name'
++ `hook-handlers'
++ `hook-combination'
+
++ `run-hook'
+
++ `add-to-hook'
++ `remove-from-hook'
++ `clear-hook'
+
+The builtin kinds of hooks are the following
+
++ list of handlers as value of a symbol
++ list of handlers in an object slot
++ hook object is associated to arbitrary Lisp object"))
