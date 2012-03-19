@@ -22,7 +22,6 @@
   (:use
    :cl
    :alexandria
-   :iterate
    :bind)
 
   ;; Documentation Type Symbol

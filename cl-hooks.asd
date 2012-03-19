@@ -39,7 +39,6 @@
   :description "This system provides the hooks extension point
 mechanism (as known, e.g., from GNU Emacs)."
   :depends-on  (:alexandria
-		:iterate
 		:metabang-bind
 		:closer-mop)
   :components  ((:module     "src/early"

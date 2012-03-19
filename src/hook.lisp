@@ -82,11 +82,13 @@
   (combine-results
    hook (hook-combination hook)
    ;; Run all handlers with restarts and collect the results (if any).
-   (iter (for handler in (hook-handlers hook))
-	 (when-let ((values (multiple-value-list
-			     (apply #'run-handler-with-restarts
-				    handler args))))
-	   (collect values)))))
+   (let ((result))
+     (dolist (handler (hook-handlers hook))
+       (when-let ((values (multiple-value-list
+			   (apply #'run-handler-with-restarts
+				  handler args))))
+	 (push values result)))
+     (nreverse result))))
 
 (declaim (inline run-hook-fast))
 
@@ -97,8 +99,8 @@
 + do not collect or combine any values returned by handlers."
   (declare (optimize (speed 3) (safety 0) (debug 0)))
   ;; Run all handlers without restarts.
-  (iter (for handler in (hook-handlers hook))
-	(apply #'run-handler-without-restarts handler args))
+  (dolist (handler (hook-handlers hook))
+    (apply #'run-handler-without-restarts handler args))
   (values))
 
 (defmethod combine-results ((hook        t)

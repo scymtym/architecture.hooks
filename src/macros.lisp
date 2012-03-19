@@ -143,19 +143,19 @@ Example:
 	     :binding binding)))
 
   ;; Process hook-handler bindings.
-  (iter (for (hook handler) in hooks-and-handlers)
-	;; Collect a handler, install form and uninstall form.
-	(let ((handler-var (gensym)))
-	  (collect `(,handler-var (coerce ,handler 'function))
-	    :into handlers)
-	  (collect `(add-to-hook      ,hook ,handler-var)
-	    :into install-hooks)
-	  (collect `(remove-from-hook ,hook ,handler-var)
-	    :into uninstall-hooks))
-
-	;; Finally emit the code.
-	(finally (return `(let (,@handlers)
-			    ,@install-hooks
-			    (unwind-protect
-				 (progn ,@body)
-			      ,@uninstall-hooks))))))
+  (let ((handlers)
+	(install-hooks)
+	(uninstall-hooks))
+   (dolist (entry hooks-and-handlers)
+     ;; Collect a handler, install form and uninstall form.
+     (bind (((hook handler) entry)
+	    (handler-var (gensym)))
+       (push `(,handler-var (coerce ,handler 'function)) handlers)
+       (push `(add-to-hook      ,hook ,handler-var)      install-hooks)
+       (push `(remove-from-hook ,hook ,handler-var)      uninstall-hooks)))
+   ;; Finally emit the code.
+   `(let* (,@(nreverse handlers))
+      ,@(nreverse install-hooks)
+      (unwind-protect
+	   (progn ,@body)
+	,@uninstall-hooks))))
