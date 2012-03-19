@@ -20,16 +20,27 @@
 
 (cl:in-package :hooks.test)
 
-(deftestsuite object-external (object-hook-test
+(defclass %hook-object/object-external ()
+  ((my-hook :initarg  :my-hook
+	    :type     list
+	    :initform nil))
+  (:documentation
+   "Instances of this class are used in unit tests for hooks which are
+associated to objects."))
+
+(deftestsuite object-external (root
 			       hook-suite)
-  ()
+  ((object (make-instance '%hook-object/object-external)))
+  (:teardown
+   (clear-hook (external-hook object 'my-hook)))
+  (:run-setup :once-per-test-case)
   (:documentation
    "Tests for object-external hooks."))
 
 (addtest (object-external
           :documentation
 	  "Ensure that retrieving a hook object twice yields `eq'
-  results.")
+results.")
   retrieval-stability
 
   (ensure-same
@@ -37,8 +48,8 @@
    (external-hook object 'my-hook)
    :test                    #'eq
    :ignore-multiple-values? t
-   :report                  "~@<Retrieving hook ~S twice should yield `eq' results, but ~
-did not.~@:>"
+   :report                  "~@<Retrieving hook ~S twice should ~
+yield `eq' results, but did not.~@:>"
    :arguments               ((external-hook object 'my-hook))))
 
 (addtest (object-external
@@ -47,6 +58,13 @@ did not.~@:>"
   readers
 
   (exercise-hook-readers (external-hook object 'my-hook)))
+
+(addtest (object-external
+          :documentation
+	  "Test writers of object external hooks")
+  writers
+
+  (exercise-hook-writers (external-hook object 'my-hook)))
 
 (addtest (object-external
 	  :documentation
@@ -58,7 +76,7 @@ did not.~@:>"
     (multiple-value-bind (added-handler present?)
 	(add-to-hook hook handler)
       (ensure-same added-handler handler)
-      (ensure-same (length (hook-handlers hook)) 1)
+      (ensure-same (length (hook-handlers hook)) 1 :test #'=)
       (ensure (not present?)
 	      :report "~@<When adding a handler for the first time, the ~
 present? return value should be nil.~@:>"))
@@ -66,7 +84,7 @@ present? return value should be nil.~@:>"))
     (multiple-value-bind (added-handler present?)
 	(add-to-hook hook handler)
       (ensure-same added-handler handler)
-      (ensure-same (length (hook-handlers hook)) 1)
+      (ensure-same (length (hook-handlers hook)) 1 :test #'=)
       (ensure present?
 	      :report "~@<When adding a handler twice with :replace ~
 policy, the present? return value should be non-nil.~@:>"))

@@ -25,6 +25,9 @@
 (deftestsuite symbol-root (root
 			   hook-suite)
   ()
+  (:teardown
+   (clear-hook '*my-hook*))
+  (:run-setup :once-per-test-case)
   (:documentation
    "Unit tests for symbol hooks."))
 
@@ -34,6 +37,13 @@
   readers
 
   (exercise-hook-readers '*my-hook*))
+
+(addtest (symbol-root
+          :documentation
+	  "Test writers of symbol hooks")
+  writers
+
+  (exercise-hook-writers '*my-hook*))
 
 (addtest (symbol-root
 	  :documentation

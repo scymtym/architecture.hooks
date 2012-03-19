@@ -19,9 +19,21 @@
 
 (cl:in-package :hooks.test)
 
-(deftestsuite state-root (object-hook-test)
+(defclass %hook-object/state ()
+  ((my-hook :initarg  :my-hook
+	    :type     list
+	    :initform nil))
+  (:documentation
+   "Instances of this class are used in unit tests for the hook state
+mechanism."))
+
+(deftestsuite state-root (root)
   ((activate-events)
-   (deactivate-events))
+   (deactivate-events)
+   (object            (make-instance '%hook-object/state)))
+  (:teardown
+   (clear-hook (external-hook object 'my-hook)))
+  (:run-setup :once-per-test-case)
   (:function
    (ensure-events (activate deactivate description)
      (ensure-same

@@ -20,8 +20,19 @@
 
 (cl:in-package :hooks.test)
 
-(deftestsuite bind (object-hook-test)
-  ()
+(defclass %hook-object/bind ()
+  ((my-hook :initarg  :my-hook
+	    :type     list
+	    :initform nil))
+  (:documentation
+   "Instances of this class are used in unit tests for the bind
+integration."))
+
+(deftestsuite bind (root)
+  ((object (make-instance '%hook-object/bind)))
+  (:teardown
+   (clear-hook (external-hook object 'my-hook)))
+  (:run-setup :once-per-test-case)
   (:documentation
    "Unit tests for hooks and bind integration"))
 

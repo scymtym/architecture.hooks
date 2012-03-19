@@ -23,9 +23,12 @@
    :cl
    :bind
    :hooks
+
    :lift)
+
   (:export
    :root)
+
   (:documentation
    "This package contains the unit tests for cl-hooks system."))
 
@@ -44,34 +47,19 @@
   ()
   (:function
    (exercise-hook-readers (hook)
-     (ensure
-      (typep (hook-name hook) 'symbol))
+     (ensure (typep (hook-name hook) 'symbol))
+     (ensure (typep (hook-handlers hook) 'list))
+     (ensure (typep (documentation hook t) '(or null string)))
+     (ensure (stringp (princ-to-string hook)))))
+  (:function
+   (exercise-hook-writers (hook)
+     (setf (hook-handlers hook) (list #'(lambda ())))
+     (ensure-same (length (hook-handlers hook)) 1
+		  :test #'=)
 
-     (ensure
-      (typep (documentation hook t) '(or null string)))
-
-     (ensure
-      (stringp (princ-to-string hook)))))
-
+     ;; Test modifying the hook's documentation.
+     (setf (documentation hook 'hook) "foo")
+     (ensure-same (documentation hook 'hook) "foo"
+		  :test #'string=)))
   (:documentation
    "Superclass for hook test suites."))
-
-
-;;;
-;;
-
-(defclass hook-object ()
-  ((my-hook :initarg  :my-hook
-	    :type     list
-	    :initform nil
-	    :documentation
-	    "Dummy slot for internal hooks."))
-  (:documentation
-   "Instances of this class are used in unit tests for hooks which are
-stored in or associated to objects."))
-
-(deftestsuite object-hook-test (root)
-  ((object (make-instance 'hook-object)))
-  (:documentation
-   "This class can be used as a superclass of test suites for hooks
-that store information in or associate information to objects."))
