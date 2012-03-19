@@ -1,6 +1,6 @@
 ;;; cl-hooks.asd ---
 ;;
-;; Copyright (C) 2010, 2011 Jan Moringen
+;; Copyright (C) 2010, 2011, 2012 Jan Moringen
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 ;;
@@ -43,13 +43,15 @@
 		:closer-mop)
   :components  ((:module     "src"
 		 :components ((:file       "package")
+			      (:file       "protocol"
+			       :depends-on ("package"))
 			      (:file       "util"
 			       :depends-on ("package"))
 			      (:file       "conditions"
 			       :depends-on ("package"))
 			      (:file       "hook"
 			       :depends-on ("package" "util"
-					    "conditions"))
+					    "conditions" "protocol"))
 			      (:file       "state"
 			       :depends-on ("package" "hook"))
 			      (:file       "mixins"
