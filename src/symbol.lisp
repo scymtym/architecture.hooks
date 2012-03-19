@@ -1,4 +1,4 @@
-;;; symbol.lisp --- Hooks that reside in variables
+;;; symbol.lisp --- Hooks that reside in variables.
 ;;
 ;; Copyright (C) 2010, 2011, 2012 Jan Moringen
 ;;
@@ -19,10 +19,6 @@
 ;; <http://www.gnu.org/licenses>.
 
 (cl:in-package :hooks)
-
-
-;;; Behavior for Symbols
-;;
 
 (defmethod hook-name ((hook symbol))
   hook)
@@ -48,5 +44,7 @@
   (or (get hook 'hook-documentation)
       (documentation hook 'variable)))
 
-(defmethod (setf documentation) ((new-value string) (hook symbol) (type (eql 'hook)))
+(defmethod (setf documentation) ((new-value string)
+				 (hook      symbol)
+				 (type      (eql 'hook)))
   (setf (get hook 'hook-documentation) new-value))
