@@ -29,7 +29,7 @@ executes.")
   ;; Check wellformedness of variables.
   (unless (and (alexandria:length= 2 variables)
 	       (listp (second variables)))
-    (error 'hooks:malformed-hook-handler-binding
+    (error 'hooks:malformed-handler-binding
 	   :binding variables))
 
   (destructuring-bind (hook lambda-list) variables

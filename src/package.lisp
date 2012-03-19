@@ -31,13 +31,18 @@
 
   ;; Conditions
   (:export
+   :hook-error-mixin
+   :hook-error-hook
+
    :hook-error
 
    :no-such-hook
 
    :duplicate-handler
+   :hook-error-handler
 
-   :malformed-hook-handler-binding)
+   :malformed-handler-binding
+   :malformed-handler-binding-binding)
 
   ;; Hook Protocol
   (:export

@@ -139,7 +139,7 @@ Example:
   ;; Check wellformedness of hook-handler bindings.
   (let ((binding (find-if-not (curry #'length= 2) hooks-and-handlers)))
     (when binding
-      (error 'malformed-hook-handler-binding
+      (error 'malformed-handler-binding
 	     :binding binding)))
 
   ;; Process hook-handler bindings.

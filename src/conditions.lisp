@@ -60,15 +60,15 @@ to be added to a hook multiple times."))
 ;;; Conditions Related to Macros
 ;;
 
-(define-condition malformed-hook-handler-binding (error)
+(define-condition malformed-handler-binding (error)
   ((binding :initarg  :binding
-	    :reader   malformed-hook-handler-binding-binding
+	    :reader   malformed-handler-binding-binding
 	    :documentation
 	    "The invalid hook-handler binding."))
   (:report
    (lambda (condition stream)
      (format stream "Malformed hook-handler binding ~S"
-	     (malformed-hook-handler-binding-binding condition))))
+	     (malformed-handler-binding-binding condition))))
   (:documentation
    "This condition is signaled if an invalid hook-handler binding is
 detected during the expansion of an `with-handlers' macro."))
