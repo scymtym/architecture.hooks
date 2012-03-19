@@ -43,6 +43,8 @@ under the name HOOK."))
 	 :reader   hook-name
 	 :documentation
 	 "The name of this hook."))
+  (:default-initargs
+   :name (required-argument :name))
   (:documentation
    "Instances of this class represent hooks that reside outside of
 objects."))

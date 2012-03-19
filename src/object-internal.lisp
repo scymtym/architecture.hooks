@@ -38,6 +38,7 @@ name HOOK."))
 		       activatable-mixin)
   ((object :initarg  :object
 	   :type     standard-object
+	   :reader   hook-object
 	   :documentation
 	   "The object in which the hook resides.")
    (slot   :initarg  :slot
@@ -45,6 +46,9 @@ name HOOK."))
 	   :reader   hook-name
 	   :documentation
 	   "The slot in which the hook resides."))
+  (:default-initargs
+   :object (required-argument :object)
+   :slot   (required-argument :slot))
   (:documentation
    "Instances of this class represent hooks that reside in object."))
 

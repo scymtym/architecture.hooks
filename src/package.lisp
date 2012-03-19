@@ -37,6 +37,7 @@
 
    ;; Object Hook Protocol
    :object-hook
+   :hook-object
 
    ;; External Hook Protocol
    :external-hook
