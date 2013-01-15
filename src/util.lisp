@@ -4,7 +4,7 @@
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
-(cl:in-package :hooks)
+(cl:in-package #:hooks)
 
 (defun read-value ()
   "Read a replacement value."

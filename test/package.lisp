@@ -4,21 +4,21 @@
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
-(cl:defpackage :hooks.test
+(cl:defpackage #:hooks.test
   (:use
-   :cl
-   :bind
-   :hooks
+   #:cl
+   #:bind
+   #:hooks
 
-   :lift)
+   #:lift)
 
   (:export
-   :root)
+   #:root)
 
   (:documentation
    "This package contains the unit tests for cl-hooks system."))
 
-(cl:in-package :hooks.test)
+(cl:in-package #:hooks.test)
 
 (deftestsuite root ()
   ()

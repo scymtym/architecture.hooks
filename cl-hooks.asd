@@ -4,12 +4,12 @@
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
-(cl:defpackage :cl-hooks-system
+(cl:defpackage #:cl-hooks-system
   (:use
-   :cl
-   :asdf))
+   #:cl
+   #:asdf))
 
-(cl:in-package :cl-hooks-system)
+(cl:in-package #:cl-hooks-system)
 
 (when (asdf:find-system :asdf-system-connections nil)
   (asdf:load-system :asdf-system-connections))

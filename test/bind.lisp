@@ -18,7 +18,7 @@
 ;; License along with this program. If not, see
 ;; <http://www.gnu.org/licenses>.
 
-(cl:in-package :hooks.test)
+(cl:in-package #:hooks.test)
 
 (defclass %hook-object/bind ()
   ((my-hook :initarg  :my-hook

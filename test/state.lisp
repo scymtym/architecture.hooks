@@ -4,7 +4,7 @@
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
-(cl:in-package :hooks.test)
+(cl:in-package #:hooks.test)
 
 (defclass %hook-object/state ()
   ((my-hook :initarg  :my-hook

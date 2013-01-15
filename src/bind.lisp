@@ -4,7 +4,7 @@
 ;;
 ;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
-(cl:in-package :bind)
+(cl:in-package #:bind)
 
 (defbinding-form (:handler
 		  :use-values-p            nil
