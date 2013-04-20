@@ -1,7 +1,0 @@
-*.fasl
-*.html
-*.pdf
-*.tex
-auto
-doc/test-results.xml
-doc/test-report/*
