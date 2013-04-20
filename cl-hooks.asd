@@ -71,7 +71,7 @@ mechanism (as known, e.g., from GNU Emacs)."
   :license     "LLGPLv3; see COPYING for details."
   :description "Unit tests for the cl-hooks system."
   :depends-on  (:cl-hooks
-		:lift)
+		(:version :lift "1.7.1"))
   :components  ((:module     "test"
 		 :components ((:file       "package")
 			      (:file       "symbol"
