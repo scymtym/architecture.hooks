@@ -105,9 +105,9 @@ the execution of BODY."
 				     (hook        (eql (quote ,name))))
      ,(format nil "Add (de-)activation behavior to ~S for OBJECT." name)
      (multiple-value-bind (,hook-var present?) (call-next-method)
-      (unless present?
-	,@body)
-      (values ,hook-var present?))))
+       (unless present?
+	 ,@body)
+       (values ,hook-var present?))))
 
 
 ;;;
@@ -117,16 +117,16 @@ the execution of BODY."
   "Run BODY with handlers as specified in HOOKS-AND-HANDLERS.
 HOOKS-AND-HANDLERS is a list of items of the form (HOOK HANDLER) where
 HOOK is a hook and HANDLER is coercable to a function.
+
 Example:
-\(with-handlers (((object-external object 'hook)
-                  (lambda (args)
-                   (format t \"~S~%\" args))))
-  (do-something))"
+  ((with-handlers (((object-external object 'hook)
+                    (lambda (args)
+                      (format t \"~S~%\" args))))
+     (do-something))"
   ;; Check wellformedness of hook-handler bindings.
-  (let ((binding (find-if-not (curry #'length= 2) hooks-and-handlers)))
-    (when binding
-      (error 'malformed-handler-binding
-	     :binding binding)))
+  (when-let ((binding (find-if-not (curry #'length= 2) hooks-and-handlers)))
+    (error 'malformed-handler-binding
+	   :binding binding))
 
   ;; Process hook-handler bindings.
   (let ((handlers)

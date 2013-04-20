@@ -29,7 +29,7 @@ hook."))
   ((handlers :initarg  :handlers
 	     :type     list
 	     :accessor hook-handlers
-	     :initform nil
+	     :initform '()
 	     :documentation
 	     "The list of handlers associated with this hook."))
   (:documentation
