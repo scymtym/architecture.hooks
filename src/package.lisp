@@ -8,7 +8,7 @@
   (:use
    #:cl
    #:alexandria
-   #:bind)
+   #:let-plus)
 
   ;; Documentation Type Symbol
   (:export

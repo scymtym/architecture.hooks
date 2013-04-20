@@ -132,16 +132,16 @@ Example:
   (let ((handlers)
 	(install-hooks)
 	(uninstall-hooks))
-   (dolist (entry hooks-and-handlers)
-     ;; Collect a handler, install form and uninstall form.
-     (bind (((hook handler) entry)
-	    (handler-var (gensym)))
-       (push `(,handler-var (coerce ,handler 'function)) handlers)
-       (push `(add-to-hook      ,hook ,handler-var)      install-hooks)
-       (push `(remove-from-hook ,hook ,handler-var)      uninstall-hooks)))
-   ;; Finally emit the code.
-   `(let* (,@(nreverse handlers))
-      ,@(nreverse install-hooks)
-      (unwind-protect
-	   (progn ,@body)
-	,@uninstall-hooks))))
+    (dolist (entry hooks-and-handlers)
+      ;; Collect a handler, install form and uninstall form.
+      (let+ (((hook handler) entry)
+	     ((&with-gensyms handler-var)))
+	(push `(,handler-var (coerce ,handler 'function)) handlers)
+	(push `(add-to-hook      ,hook ,handler-var)      install-hooks)
+	(push `(remove-from-hook ,hook ,handler-var)      uninstall-hooks)))
+    ;; Finally emit the code.
+    `(let* (,@(nreverse handlers))
+       ,@(nreverse install-hooks)
+       (unwind-protect
+	    (progn ,@body)
+	 ,@uninstall-hooks))))

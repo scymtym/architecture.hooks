@@ -11,9 +11,6 @@
 
 (cl:in-package #:cl-hooks-system)
 
-(when (asdf:find-system :asdf-system-connections nil)
-  (asdf:load-system :asdf-system-connections))
-
 
 ;;; Hooks and Associated Test System
 ;;
@@ -26,7 +23,7 @@
   :description "This system provides the hooks extension point
 mechanism (as known, e.g., from GNU Emacs)."
   :depends-on  (:alexandria
-		:metabang-bind
+		:let-plus
 		:closer-mop)
   :components  ((:module     "src/early"
 		 :pathname   "src"
@@ -68,26 +65,7 @@ mechanism (as known, e.g., from GNU Emacs)."
 			      (:file       "object-internal"
 			       :depends-on ("package"))
 			      (:file       "state"
-			       :depends-on ("package"))
-			      (:file       "bind"
 			       :depends-on ("package"))))))
 
 (defmethod perform ((op test-op) (system (eql (find-system :cl-hooks-test))))
   (funcall (find-symbol "RUN-TESTS" :lift) :config :generic))
-
-
-;;; Hooks and Bind System Connection
-;;
-
-#+asdf-system-connections
-(defsystem-connection :cl-hooks-and-bind
-  :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
-  :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
-  :version     "0.2.0"
-  :license     "LLGPLv3; see LICENSE-LLGPL for details."
-  :description "System connection that provides a binding form that
-installs and uninstalls hook handlers around a form."
-  :requires    (cl-hooks
-		metabang-bind)
-  :components  ((:file       "bind"
-		 :pathname   "src/bind")))

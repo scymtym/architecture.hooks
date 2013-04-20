@@ -7,7 +7,6 @@
 (cl:defpackage #:hooks.test
   (:use
    #:cl
-   #:bind
    #:hooks
 
    #:lift)
