@@ -24,7 +24,8 @@
 mechanism (as known, e.g., from GNU Emacs)."
   :depends-on  (:alexandria
 		:let-plus
-		:closer-mop)
+		:closer-mop
+		:trivial-garbage)
   :components  ((:module     "src/early"
 		 :pathname   "src"
 		 :serial     t

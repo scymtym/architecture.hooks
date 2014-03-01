@@ -75,7 +75,7 @@ name HOOK."))
 (defmethod object-hook ((object standard-object) (hook symbol))
   (let ((table (or (get hook 'hook-objects)
 		   (setf (get hook 'hook-objects)
-			 (make-hash-table :test #'eq :weakness :key)))))
+		         (trivial-garbage:make-weak-hash-table :test #'eq :weakness :key)))))
     (or (nth-value 0 (gethash object table))
 	(setf (gethash object table)
 	      (progn
