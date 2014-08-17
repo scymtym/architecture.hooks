@@ -1,6 +1,6 @@
 ;;;; util.lisp --- Utilities used by the hooks system.
 ;;;;
-;;;; Copyright (C) 2010, 2011, 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2010, 2011, 2012, 2013, 2014 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -43,11 +43,12 @@ The installed restarts are:
 	   (go :retry))
 
 	 ;; Skip the handler.
-	 (skip ()
+	 (continue (&optional condition)
 	   :report
 	   (lambda (stream)
 	     (format stream
-		     "~@<Skip handler ~S.~:@>" handler)))
+		     "~@<Skip handler ~S.~:@>" handler))
+	   (declare (ignore condition)))
 
 	 ;; Use a replacement value.
 	 (use-value (value)
