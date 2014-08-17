@@ -1,14 +1,12 @@
 ;;;; state.lisp --- Functionality for tracking the state of hooks.
 ;;;;
-;;;; Copyright (C) 2010, 2011, 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2010, 2011, 2012, 2013, 2014 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
 (cl:in-package #:hooks)
 
-
 ;;; Hook Activity Tracking Protocol
-;;
 
 (defgeneric on-become-active (hook)
   (:documentation
@@ -18,15 +16,13 @@
   (:documentation
    "Called when HOOK becomes inactive."))
 
-
-;;; Default Implementation of the Activity Tracking Protocol
-;;
+;; Default Implementation of the Activity Tracking Protocol
 
 (defmethod (setf hook-handlers) :around ((new-value list) (hook t))
   "Check whether HOOK becomes active or inactive."
   (let ((was-empty?     (null (hook-handlers hook)))
-	(will-be-empty? (null new-value))
-	(result         (call-next-method)))
+        (will-be-empty? (null new-value))
+        (result         (call-next-method)))
     (cond
       ((and was-empty? (not will-be-empty?))
        (on-become-active hook))

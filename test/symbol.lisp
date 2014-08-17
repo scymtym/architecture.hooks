@@ -1,6 +1,6 @@
 ;;;; symbol.lisp --- Unit test for symbol hooks.
 ;;;;
-;;;; Copyright (C) 2011, 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2011, 2012, 2013, 2014 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -10,7 +10,7 @@
   "A hook for tests.")
 
 (deftestsuite symbol-root (root
-			   hook-suite)
+                           hook-suite)
   ()
   (:teardown
    (clear-hook '*my-hook*))
@@ -20,48 +20,48 @@
 
 (addtest (symbol-root
           :documentation
-	  "Test readers of symbol hooks")
+          "Test readers of symbol hooks")
   readers
 
   (exercise-hook-readers '*my-hook*))
 
 (addtest (symbol-root
           :documentation
-	  "Test writers of symbol hooks")
+          "Test writers of symbol hooks")
   writers
 
   (exercise-hook-writers '*my-hook*))
 
 (addtest (symbol-root
-	  :documentation
-	  "Test adding handlers to symbol hooks.")
+          :documentation
+          "Test adding handlers to symbol hooks.")
   add-to-hook
 
   (let ((hook    '*my-hook*)
-	(handler #'(lambda ())))
+        (handler #'(lambda ())))
     (multiple-value-bind (added-handler present?)
-	(add-to-hook hook handler)
+        (add-to-hook hook handler)
       (ensure-same added-handler handler)
       (ensure-same (length (hook-handlers hook)) 1)
       (ensure (not present?)
-	      :report "~@<When adding a handler for the first time, the ~
+              :report "~@<When adding a handler for the first time, the ~
 present? return value should be nil.~@:>"))
 
     (multiple-value-bind (added-handler present?)
-	(add-to-hook hook handler)
+        (add-to-hook hook handler)
       (ensure-same added-handler handler)
       (ensure-same (length (hook-handlers hook)) 1)
       (ensure present?
-	      :report "~@<When adding a handler twice with :replace ~
+              :report "~@<When adding a handler twice with :replace ~
 policy, the present? return value should be non-nil.~@:>"))
 
     (ensure-condition duplicate-handler
       (add-to-hook hook handler
-		   :duplicate-policy :error))))
+                   :duplicate-policy :error))))
 
 (addtest (symbol-root
-	  :documentation
-	  "Test clearing symbol hooks.")
+          :documentation
+          "Test clearing symbol hooks.")
   clear-hook
 
   (let ((hook '*my-hook*))
@@ -70,5 +70,5 @@ policy, the present? return value should be non-nil.~@:>"))
 
     (clear-hook hook)
     (ensure-same (hook-handlers hook) nil
-		 :report "~@<Found remaining handlers after clearing the
+                 :report "~@<Found remaining handlers after clearing the
 hook.~@:>")))

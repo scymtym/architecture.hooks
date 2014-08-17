@@ -1,6 +1,6 @@
 ;;;; package.lisp --- Package for hooks unit tests
 ;;;;
-;;;; Copyright (C) 2010, 2011, 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2010, 2011, 2012, 2013, 2014 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -24,9 +24,7 @@
   (:documentation
    "Root unit test of the cl-hooks system."))
 
-
 ;;;
-;;
 
 (deftestsuite hook-suite ()
   ()
@@ -40,11 +38,11 @@
    (exercise-hook-writers (hook)
      (setf (hook-handlers hook) (list #'(lambda ())))
      (ensure-same (length (hook-handlers hook)) 1
-		  :test #'=)
+                  :test #'=)
 
      ;; Test modifying the hook's documentation.
      (setf (documentation hook 'hook) "foo")
      (ensure-same (documentation hook 'hook) "foo"
-		  :test #'string=)))
+                  :test #'string=)))
   (:documentation
    "Superclass for hook test suites."))

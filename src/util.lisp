@@ -31,33 +31,33 @@
   (tagbody
    :retry
      (restart-case
-	 (return-from run-handler-with-restarts
-	   (apply (the function handler) args))
+         (return-from run-handler-with-restarts
+           (apply (the function handler) args))
 
        ;; Retry running the handler.
        (retry ()
-	 :report (lambda (stream)
-		   (format stream
-			   "~@<Retry running handler ~S.~:@>"
-			   handler))
-	 (go :retry))
+         :report (lambda (stream)
+                   (format stream
+                           "~@<Retry running handler ~S.~:@>"
+                           handler))
+         (go :retry))
 
        ;; Skip the handler.
        (continue (&optional condition)
-	 :report (lambda (stream)
-		   (format stream
-			   "~@<Skip handler ~S.~:@>" handler))
-	 (declare (ignore condition)))
+         :report (lambda (stream)
+                   (format stream
+                           "~@<Skip handler ~S.~:@>" handler))
+         (declare (ignore condition)))
 
        ;; Use a replacement value.
        (use-value (value)
-	 :report (lambda (stream)
-		   (format stream
-			   "~@<Specify a value to be used instead of ~
-			    the result of running handler ~S.~:@>"
-			   handler))
-	 :interactive read-value
-	 (return-from run-handler-with-restarts value)))))
+         :report (lambda (stream)
+                   (format stream
+                           "~@<Specify a value to be used instead of ~
+                            the result of running handler ~S.~:@>"
+                           handler))
+         :interactive read-value
+         (return-from run-handler-with-restarts value)))))
 
 (defmacro with-hook-restarts (hook &body body)
   "Run BODY after installing restarts for HOOK.
@@ -68,24 +68,24 @@
   (once-only (hook)
     `(block nil
        (tagbody
-	:retry
-	  (restart-case
-	      (return-from nil (progn ,@body))
+        :retry
+          (restart-case
+              (return-from nil (progn ,@body))
 
-	    ;; Retry running the hook.
-	    (retry ()
-	      :report (lambda (stream)
-			(format stream
-				"~@<Retry running hook ~S.~@:>"
-				,hook))
-	      (go :retry))
+            ;; Retry running the hook.
+            (retry ()
+              :report (lambda (stream)
+                        (format stream
+                                "~@<Retry running hook ~S.~@:>"
+                                ,hook))
+              (go :retry))
 
-	    ;; Use a replacement value.
-	    (use-value (value)
-	      :report      (lambda (stream)
-			     (format stream
-				     "~@<Specify a value instead of ~
-				      running hook ~S.~@:>"
-				     ,hook))
-	      :interactive read-value
-	      (return-from nil value)))))))
+            ;; Use a replacement value.
+            (use-value (value)
+              :report      (lambda (stream)
+                             (format stream
+                                     "~@<Specify a value instead of ~
+                                      running hook ~S.~@:>"
+                                     ,hook))
+              :interactive read-value
+              (return-from nil value)))))))

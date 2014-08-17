@@ -1,31 +1,29 @@
 ;;;; hook.lisp --- Generic hook interface
 ;;;;
-;;;; Copyright (C) 2010, 2011, 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2010, 2011, 2012, 2013, 2014 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
 (cl:in-package #:hooks)
 
-
 ;;; Generic Implementation
-;;
 
 (defmethod hook-combination ((hook t))
   'cl:progn)
 
 (defmethod add-to-hook ((hook t) (handler function)
-			&key
-			(duplicate-policy :replace))
+                        &key
+                        (duplicate-policy :replace))
   (let+ ((present? (member handler (hook-handlers hook)))
-	 ((&flet add-it ()
-	    (push handler (hook-handlers hook))
-	    handler)))
+         ((&flet add-it ()
+            (push handler (hook-handlers hook))
+            handler)))
     (ecase duplicate-policy
       ;; If HANDLER is already present, do nothing.
       (:do-nothing
        (if present?
-	   (values (hook-handlers hook) t)
-	   (values (add-it) nil)))
+           (values (hook-handlers hook) t)
+           (values (add-it) nil)))
 
       ;; Add HANDLER, regardless of whether it is already present or
       ;; not.
@@ -37,18 +35,18 @@
       ;; recently added handler.
       (:replace
        (when present?
-	 ;; Do not use remove-from-hook to avoid running possibly
-	 ;; attached behavior.
-	 (removef (hook-handlers hook) handler))
+         ;; Do not use remove-from-hook to avoid running possibly
+         ;; attached behavior.
+         (removef (hook-handlers hook) handler))
        (values (add-it) present?))
 
       ;; When adding the same handler twice is not allowed and HANDLER
       ;; is already present, signal an error.
       (:error
        (when present?
-	 (error 'duplicate-handler
-		:hook    hook
-		:handler handler))
+         (error 'duplicate-handler
+                :hook    hook
+                :handler handler))
        (values (add-it) nil)))))
 
 (defmethod remove-from-hook ((hook t) (handler function))
@@ -71,9 +69,9 @@
    (let ((result))
      (dolist (handler (hook-handlers hook))
        (when-let ((values (multiple-value-list
-			   (apply #'run-handler-with-restarts
-				  handler args))))
-	 (push values result)))
+                           (apply #'run-handler-with-restarts
+                                  handler args))))
+         (push values result)))
      (nreverse result))))
 
 (declaim (inline run-hook-fast))
@@ -90,11 +88,11 @@
   (values))
 
 (defmethod combine-results ((hook        t)
-			    (combination (eql 'cl:progn))
-			    (results     list))
+                            (combination (eql 'cl:progn))
+                            (results     list))
   (apply #'values (lastcar results)))
 
 (defmethod combine-results ((hook        t)
-			    (combination function)
-			    (results     list))
+                            (combination function)
+                            (results     list))
   (apply combination (mapcar #'first results)))

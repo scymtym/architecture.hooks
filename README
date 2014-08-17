@@ -193,8 +193,8 @@
 ** Hook Restarts
    + =retry= :: When this restart is invoked, the hook is ran again.
    + =use-value= :: When this restart is invoked, the hook is not ran
-	and a replacement value is read interactively and returned in
-	place of the result of running the hook.
+        and a replacement value is read interactively and returned in
+        place of the result of running the hook.
 ** Handler Restarts
    + =retry= :: When this restart is invoked, the handler is executed
         again.

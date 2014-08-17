@@ -1,6 +1,6 @@
 ;;;; state.lisp ---
 ;;;;
-;;;; Copyright (C) 2011, 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2011, 2012, 2013, 2014 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -8,8 +8,8 @@
 
 (defclass %hook-object/state ()
   ((my-hook :initarg  :my-hook
-	    :type     list
-	    :initform nil))
+            :type     list
+            :initform nil))
   (:documentation
    "Instances of this class are used in unit tests for the hook state
 mechanism."))
@@ -39,8 +39,8 @@ mechanism."))
    "Unit tests for hook activation and deactivation."))
 
 (addtest (state-root
-	  :documentation
-	  "Smoke test for hook activation and deactivation.")
+          :documentation
+          "Smoke test for hook activation and deactivation.")
   smoke
 
   ;; We the hook (de)activate code is run, we push the hook object on
@@ -48,7 +48,7 @@ mechanism."))
   ;; with the correct hook object.
   (let* ((hook (external-hook object 'my-hook)))
     (define-hook-activation (hook :var hook*)
-	(push hook* activate-events)
+        (push hook* activate-events)
       (push hook* deactivate-events))
 
     ;; Add one hook -> one activate event.

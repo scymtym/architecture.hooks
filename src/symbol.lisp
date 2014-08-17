@@ -1,6 +1,6 @@
 ;;;; symbol.lisp --- Hooks that reside in variables.
 ;;;;
-;;;; Copyright (C) 2010, 2011, 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2010, 2011, 2012, 2013, 2014 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -21,7 +21,7 @@
     (unbound-variable (condition)
       (declare (ignore condition))
       (error 'no-such-hook
-	     :hook hook))))
+             :hook hook))))
 
 (defmethod (setf hook-handlers) ((new-value list) (hook symbol))
   (setf (symbol-value hook) new-value))
@@ -31,6 +31,6 @@
       (documentation hook 'variable)))
 
 (defmethod (setf documentation) ((new-value string)
-				 (hook      symbol)
-				 (type      (eql 'hook)))
+                                 (hook      symbol)
+                                 (type      (eql 'hook)))
   (setf (get hook 'hook-documentation) new-value))
