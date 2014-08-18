@@ -30,19 +30,13 @@ mechanism (as known, e.g., from GNU Emacs)."
                  :components ((:file       "package")
                               (:file       "conditions")
                               (:file       "protocol")
-                              (:file       "util")))
-
-                (:module     "src"
-                 :depends-on ("src/early")
-                 :components ((:file       "hook")
+                              (:file       "util")
+                              (:file       "hook")
                               (:file       "state")
-                              (:file       "mixins"
-                               :depends-on ("state"))
+                              (:file       "mixins")
                               (:file       "symbol")
-                              (:file       "object-internal"
-                               :depends-on ("mixins"))
-                              (:file       "object-external"
-                               :depends-on ("mixins"))
+                              (:file       "object-internal")
+                              (:file       "object-external")
                               (:file       "macros"))))
 
   :in-order-to ((test-op (test-op :cl-hooks-test))))
@@ -56,15 +50,12 @@ mechanism (as known, e.g., from GNU Emacs)."
   :depends-on  (:cl-hooks
                 (:version :lift "1.7.1"))
   :components  ((:module     "test"
+                 :serial     t
                  :components ((:file       "package")
-                              (:file       "symbol"
-                               :depends-on ("package"))
-                              (:file       "object-external"
-                               :depends-on ("package"))
-                              (:file       "object-internal"
-                               :depends-on ("package"))
-                              (:file       "state"
-                               :depends-on ("package"))))))
+                              (:file       "symbol")
+                              (:file       "object-external")
+                              (:file       "object-internal")
+                              (:file       "state")))))
 
 (defmethod perform ((op test-op) (system (eql (find-system :cl-hooks-test))))
   (funcall (find-symbol "RUN-TESTS" :lift) :config :generic))
