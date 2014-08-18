@@ -55,24 +55,50 @@
 (defmethod clear-hook ((hook t))
   (setf (hook-handlers hook) nil))
 
-(defmethod run-hook :around ((hook t) &rest args)
-  (declare (ignore args))
-  (with-hook-restarts hook
-    (call-next-method)))
-
 (defmethod run-hook ((hook t) &rest args)
-  ;; Use hook combination to combine the list of results and form the
-  ;; return value.
-  (combine-results
-   hook (hook-combination hook)
-   ;; Run all handlers with restarts and collect the results (if any).
-   (let ((result))
-     (dolist (handler (hook-handlers hook))
-       (when-let ((values (multiple-value-list
-                           (apply #'run-handler-with-restarts
-                                  handler args))))
-         (push values result)))
-     (nreverse result))))
+  (let+ (((&structure-r/o hook- handlers combination) hook)
+         (result '())
+         (current-handler)
+         ((&labels run-handler (handler)
+            (when-let ((values (multiple-value-list
+                                (apply (the function handler) args))))
+              (push values result))))
+         ((&labels handle-error (condition)
+            (signal-with-hook-and-handler-restarts
+             hook current-handler condition
+             (lambda ()
+               (setf handlers (hook-handlers hook)
+                     result   '())
+               (throw 'abort-handler nil))
+             (lambda (value)
+               (return-from run-hook value))
+             (lambda ()
+               (push current-handler handlers)
+               (throw 'abort-handler nil))
+             (lambda ()
+               (throw 'abort-handler nil))
+             (lambda (value)
+               (push (list value) result)
+               (throw 'abort-handler nil))))))
+    (declare (dynamic-extent #'run-handler #'handle-error))
+
+    ;; Run all handlers and collect return values (if any).
+    (when handlers
+      ;; This slightly complicated logic ensures that the only things
+      ;; we have to do in the common case are 1) binding the handler
+      ;; 2) establishing the catch tag. Everything else only happens
+      ;; when a handler actually signals an error.
+      (handler-bind ((error #'handle-error))
+        (do () ((null handlers))
+          (catch 'abort-handler
+            (do () ((null handlers))
+              (setf current-handler (pop handlers))
+              (run-handler current-handler)))))
+      (setf result (nreverse result)))
+
+    ;; Use hook combination to combine the list of results and form
+    ;; the return value.
+    (combine-results hook combination result)))
 
 (declaim (inline run-hook-fast))
 

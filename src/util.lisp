@@ -19,73 +19,60 @@
   "Run HANDLER with ARGS."
   (apply (the function handler) args))
 
-(declaim (inline run-handler-with-restarts))
+(defun signal-with-hook-and-handler-restarts
+    (hook handler condition
+     retry-hook use-value-for-hook
+     retry-handler skip-handler use-value-for-handler)
+  "Signal CONDITION with appropriate restarts installed.
 
-(defun run-handler-with-restarts (handler &rest args)
-  "Run HANDLER with ARGS after installing appropriate restarts.
-
-   The installed restarts are:
+   The installed restarts for HANDLER are:
    + `retry'
    + `continue'
-   + `use-value'"
-  (tagbody
-   :retry
-     (restart-case
-         (return-from run-handler-with-restarts
-           (apply (the function handler) args))
+   + `use-value'
 
-       ;; Retry running the handler.
-       (retry ()
-         :report (lambda (stream)
-                   (format stream
-                           "~@<Retry running handler ~S.~:@>"
-                           handler))
-         (go :retry))
-
-       ;; Skip the handler.
-       (continue (&optional condition)
-         :report (lambda (stream)
-                   (format stream
-                           "~@<Skip handler ~S.~:@>" handler))
-         (declare (ignore condition)))
-
-       ;; Use a replacement value.
-       (use-value (value)
-         :report (lambda (stream)
-                   (format stream
-                           "~@<Specify a value to be used instead of ~
-                            the result of running handler ~S.~:@>"
-                           handler))
-         :interactive read-value
-         (return-from run-handler-with-restarts value)))))
-
-(defmacro with-hook-restarts (hook &body body)
-  "Run BODY after installing restarts for HOOK.
-
-   The installed restarts are:
+   The installed restarts for HOOK are:
    + `retry'
    + `use-value'"
-  (once-only (hook)
-    `(block nil
-       (tagbody
-        :retry
-          (restart-case
-              (return-from nil (progn ,@body))
+  (restart-case
+      (progn ; do not associate restarts
+        (error condition))
 
-            ;; Retry running the hook.
-            (retry ()
-              :report (lambda (stream)
-                        (format stream
-                                "~@<Retry running hook ~S.~@:>"
-                                ,hook))
-              (go :retry))
+    ;; Retry running the handler.
+    (retry ()
+      :report (lambda (stream)
+                (format stream "~@<Retry running handler ~S.~:@>"
+                        handler))
+      (funcall retry-handler))
 
-            ;; Use a replacement value.
-            (use-value (value)
-              :report      (lambda (stream)
-                             (format stream
-                                     "~@<Specify a value instead of ~
-                                      running hook ~S.~@:>"
-                                     ,hook))
-              :interactive read-value
-              (return-from nil value)))))))
+    ;; Skip the handler.
+    (continue (&optional condition)
+      :report (lambda (stream)
+                (format stream "~@<Skip handler ~S.~:@>" handler))
+      (declare (ignore condition))
+      (funcall skip-handler))
+
+    ;; Use a replacement value.
+    (use-value (value)
+      :report      (lambda (stream)
+                     (format stream "~@<Specify a value to be used instead ~
+                                     of the result of running handler ~
+                                     ~S.~:@>"
+                             handler))
+      :interactive read-value
+      (funcall use-value-for-handler value))
+
+    ;; Retry running the hook.
+    (retry ()
+      :report (lambda (stream)
+                (format stream "~@<Retry running hook ~S.~@:>"
+                        hook))
+      (funcall retry-hook))
+
+    ;; Use a replacement value.
+    (use-value (value)
+      :report      (lambda (stream)
+                     (format stream "~@<Specify a value instead of ~
+                                     running hook ~S.~@:>"
+                             hook))
+      :interactive read-value
+      (funcall use-value-for-hook value))))
