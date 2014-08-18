@@ -16,7 +16,7 @@
 (defsystem :cl-hooks
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
-  :version     "0.2.0"
+  :version     "0.2.1"
   :license     "LLGPLv3; see COPYING for details."
   :description "This system provides the hooks extension point
 mechanism (as known, e.g., from GNU Emacs)."
@@ -44,7 +44,7 @@ mechanism (as known, e.g., from GNU Emacs)."
 (defsystem :cl-hooks-test
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
-  :version     "0.2.0"
+  :version     "0.2.1"
   :license     "LLGPLv3; see COPYING for details."
   :description "Unit tests for the cl-hooks system."
   :depends-on  (:cl-hooks
