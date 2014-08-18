@@ -98,7 +98,9 @@
 
     ;; Use hook combination to combine the list of results and form
     ;; the return value.
-    (combine-results hook combination result)))
+    (case combination
+      (cl:progn (values-list (lastcar result)))
+      (t        (combine-results hook combination result)))))
 
 (declaim (inline run-hook-fast))
 
