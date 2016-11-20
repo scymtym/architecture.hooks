@@ -7,7 +7,7 @@
 (defsystem :cl-hooks
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
-  :version     "0.2.1"
+  :version     (:read-file-form "version-string.sexp")
   :license     "LLGPLv3" ; see COPYING for details.
   :description "This system provides the hooks extension point
 mechanism (as known, e.g., from GNU Emacs)."
@@ -35,11 +35,11 @@ mechanism (as known, e.g., from GNU Emacs)."
 (defsystem :cl-hooks-test
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
-  :version     "0.2.1"
+  :version     (:read-file-form "version-string.sexp")
   :license     "LLGPLv3" ; see COPYING for details.
   :description "Unit tests for the cl-hooks system."
-  :depends-on  (:cl-hooks
-                (:version :lift "1.7.1"))
+  :depends-on  ((:version :cl-hooks (:read-file-form "version-string.sexp"))
+                (:version :lift     "1.7.1"))
   :components  ((:module     "test"
                  :serial     t
                  :components ((:file       "package")
