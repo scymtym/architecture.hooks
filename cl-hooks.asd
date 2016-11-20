@@ -8,7 +8,7 @@
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     "0.2.1"
-  :license     "LLGPLv3; see COPYING for details."
+  :license     "LLGPLv3" ; see COPYING for details.
   :description "This system provides the hooks extension point
 mechanism (as known, e.g., from GNU Emacs)."
   :depends-on  (:alexandria
@@ -36,7 +36,7 @@ mechanism (as known, e.g., from GNU Emacs)."
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     "0.2.1"
-  :license     "LLGPLv3; see COPYING for details."
+  :license     "LLGPLv3" ; see COPYING for details.
   :description "Unit tests for the cl-hooks system."
   :depends-on  (:cl-hooks
                 (:version :lift "1.7.1"))
