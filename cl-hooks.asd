@@ -30,9 +30,9 @@ mechanism (as known, e.g., from GNU Emacs)."
                               (:file       "object-external")
                               (:file       "macros"))))
 
-  :in-order-to ((test-op (test-op :cl-hooks-test))))
+  :in-order-to ((test-op (test-op :cl-hooks/test))))
 
-(defsystem :cl-hooks-test
+(defsystem :cl-hooks/test
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     (:read-file-form "version-string.sexp")
@@ -48,5 +48,5 @@ mechanism (as known, e.g., from GNU Emacs)."
                               (:file       "object-internal")
                               (:file       "state")))))
 
-(defmethod perform ((op test-op) (system (eql (find-system :cl-hooks-test))))
+(defmethod perform ((op test-op) (system (eql (find-system :cl-hooks/test))))
   (funcall (find-symbol "RUN-TESTS" :lift) :config :generic))
