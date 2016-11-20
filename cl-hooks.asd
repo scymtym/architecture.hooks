@@ -1,17 +1,8 @@
 ;;;; cl-hooks.asd --- System definition for cl-hooks system.
 ;;;;
-;;;; Copyright (C) 2010, 2011, 2012, 2013, 2014 Jan Moringen
+;;;; Copyright (C) 2010-2016 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
-
-(cl:defpackage #:cl-hooks-system
-  (:use
-   #:cl
-   #:asdf))
-
-(cl:in-package #:cl-hooks-system)
-
-;;; Hooks and Associated Test System
 
 (defsystem :cl-hooks
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
