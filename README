@@ -3,7 +3,7 @@
 #+EMAIL:  jmoringe@techfak.uni-bielefeld.DE
 
 
-* Prelude							   :noexport:
+* Prelude                                                          :noexport:
 #+BEGIN_SRC lisp :session hooks
   (asdf:load-system :cl-hooks)
 #+END_SRC
@@ -215,7 +215,7 @@
     (hooks:run-hook (hooks:external-hook *my-object* 'my-hook)))
 #+END_SRC
 
-* settings							   :noexport:
+* settings                                                         :noexport:
 #+LATEX_CLASS: scrartcl
 
 # Local Variables:
