@@ -20,17 +20,17 @@
   "Unit tests for symbol hooks.")
 (in-suite :hooks.symbol-root)
 
-(test (readers :fixture with-symbol-hook)
+(test (symbol.readers :fixture with-symbol-hook)
   "Test readers of symbol hooks."
 
   (exercise-hook-readers '*my-hook*))
 
-(test (writers :fixture with-symbol-hook)
+(test (symbol.writers :fixture with-symbol-hook)
   "Test writers of symbol hooks."
 
   (exercise-hook-writers '*my-hook*))
 
-(test (add-to-hook :fixture with-symbol-hook)
+(test (symbol.add-to-hook :fixture with-symbol-hook)
   "Test adding handlers to symbol hooks."
 
   (let ((hook    '*my-hook*)
@@ -54,7 +54,7 @@
     (signals duplicate-handler
       (add-to-hook hook handler :duplicate-policy :error))))
 
-(test (clear-hook :fixture with-symbol-hook)
+(test (symbol.clear-hook :fixture with-symbol-hook)
   "Test clearing symbol hooks."
 
   (let ((hook '*my-hook*))

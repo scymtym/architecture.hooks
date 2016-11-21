@@ -26,19 +26,22 @@
   "Tests for object-internal hooks.")
 (in-suite :hooks.object-internal)
 
-(test (retrieval-stability :fixture with-internal-hook-object)
+(test (object-internal.retrieval-stability
+       :fixture with-internal-hook-object)
   "Ensure that retrieving a hook object twice yields `eq' results."
 
   (is (eq (object-hook object 'my-hook) (object-hook object 'my-hook))
       "Retrieving hook ~A twice should yield `eq' results, but did not."
       (object-hook object 'my-hook)))
 
-(test (readers :fixture with-internal-hook-object)
+(test (object-internal.readers
+       :fixture with-internal-hook-object)
   "Test readers of object-internal hooks."
 
   (exercise-hook-readers (object-hook object 'my-hook)))
 
-(test (writers :fixture with-internal-hook-object)
+(test (object-internal.writers
+       :fixture with-internal-hook-object)
   "Test writers of object-internal hooks."
 
   (exercise-hook-writers (object-hook object 'my-hook)))

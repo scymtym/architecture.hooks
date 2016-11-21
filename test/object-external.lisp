@@ -26,7 +26,8 @@
   "Tests for object-external hooks.")
 (in-suite :hooks.object-external)
 
-(test (retrieval-stability :fixture with-external-hook-object)
+(test (object-external.retrieval-stability
+       :fixture with-external-hook-object)
   "Ensure that retrieving a hook object twice yields `eq' results."
 
   (is (eq (external-hook object 'my-hook) (external-hook object 'my-hook))
@@ -34,17 +35,20 @@
        not.~@:>"
       (external-hook object 'my-hook)))
 
-(test (readers :fixture with-external-hook-object)
+(test (object-external.readers
+       :fixture with-external-hook-object)
   "Test readers of object external hooks."
 
   (exercise-hook-readers (external-hook object 'my-hook)))
 
-(test (writers :fixture with-external-hook-object)
+(test (object-external.writers
+       :fixture with-external-hook-object)
   "Test writers of object external hooks."
 
   (exercise-hook-writers (external-hook object 'my-hook)))
 
-(test (add-to-hook :fixture with-external-hook-object)
+(test (object-external.add-to-hook
+       :fixture with-external-hook-object)
   "Test adding handlers to object external hooks."
 
   (let ((hook    (external-hook object 'my-hook))
@@ -68,7 +72,8 @@
     (signals duplicate-handler
       (add-to-hook hook handler :duplicate-policy :error))))
 
-(test (clear-hook :fixture with-external-hook-object)
+(test (object-external.clear-hook
+       :fixture with-external-hook-object)
   "Test clearing object external hooks."
 
   (let ((hook (external-hook object 'my-hook)))
