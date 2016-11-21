@@ -34,6 +34,9 @@
   This library tries to complement some of these weaknesses of
   method-based extension-points via the concept of hooks.
 
+  #+ATTR_HTML: :alt "build status image" :title Build Status :align right
+  [[https://travis-ci.org/scymtym/architecture.hooks][https://travis-ci.org/scymtym/architecture.hooks.svg]]
+
 * Hooks
 ** Definition
    A hook is an extension point consisting of
