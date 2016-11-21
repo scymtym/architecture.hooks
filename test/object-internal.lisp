@@ -1,6 +1,6 @@
 ;;;; object-internal.lisp --- Unit tests for object internal hooks.
 ;;;;
-;;;; Copyright (C) 2011, 2012, 2013, 2014 Jan Moringen
+;;;; Copyright (C) 2011-2016 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -12,41 +12,33 @@
             :initform nil))
   (:documentation
    "Instances of this class are used in unit tests for hooks which are
-stored in objects."))
+    stored in objects."))
 
-(deftestsuite object-internal (root
-                               hook-suite)
-  ((object (make-instance '%hook-object/object-internal)))
-  (:teardown
-   (clear-hook (external-hook object 'my-hook)))
-  (:run-setup :once-per-test-case)
-  (:documentation
-   "Tests for object-internal hooks."))
+(def-fixture with-internal-hook-object ()
+  (let ((object (make-instance '%hook-object/object-internal)))
+    (unwind-protect
+         (&body)
+      (clear-hook (external-hook object 'my-hook)))))
 
-(addtest (object-internal
-          :documentation
-          "Test readers of object-internal hooks")
-  readers
+(def-suite :hooks.object-internal
+  :in :hooks
+  :description
+  "Tests for object-internal hooks.")
+(in-suite :hooks.object-internal)
+
+(test (retrieval-stability :fixture with-internal-hook-object)
+  "Ensure that retrieving a hook object twice yields `eq' results."
+
+  (is (eq (object-hook object 'my-hook) (object-hook object 'my-hook))
+      "Retrieving hook ~A twice should yield `eq' results, but did not."
+      (object-hook object 'my-hook)))
+
+(test (readers :fixture with-internal-hook-object)
+  "Test readers of object-internal hooks."
 
   (exercise-hook-readers (object-hook object 'my-hook)))
 
-(addtest (object-internal
-          :documentation
-          "Test writers of object-internal hooks")
-  writers
+(test (writers :fixture with-internal-hook-object)
+  "Test writers of object-internal hooks."
 
   (exercise-hook-writers (object-hook object 'my-hook)))
-
-(addtest (object-internal
-          :documentation
-          "Ensure that retrieving a hook object twice yields `eq'
-results.")
-  retrieval-stability
-
-  (ensure-same
-   (object-hook object 'my-hook)
-   (object-hook object 'my-hook)
-   :test                    #'eq
-   :ignore-multiple-values? t
-   :report                  "Retrieving hook ~A twice should yield `eq' results, but did not."
-   :arguments               ((object-hook object 'my-hook))))

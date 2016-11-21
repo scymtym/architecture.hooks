@@ -39,7 +39,7 @@ mechanism (as known, e.g., from GNU Emacs)."
   :license     "LLGPLv3" ; see COPYING for details.
   :description "Unit tests for the cl-hooks system."
   :depends-on  ((:version :cl-hooks (:read-file-form "version-string.sexp"))
-                (:version :lift     "1.7.1"))
+                (:version :fiveam   "1.3"))
   :components  ((:module     "test"
                  :serial     t
                  :components ((:file       "package")
@@ -49,4 +49,4 @@ mechanism (as known, e.g., from GNU Emacs)."
                               (:file       "state")))))
 
 (defmethod perform ((op test-op) (system (eql (find-system :cl-hooks/test))))
-  (funcall (find-symbol "RUN-TESTS" :lift) :config :generic))
+  (uiop:symbol-call '#:hooks.test '#:run-tests))

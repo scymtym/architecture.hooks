@@ -1,6 +1,6 @@
 ;;;; object-external.lisp ---
 ;;;;
-;;;; Copyright (C) 2010, 2011, 2012, 2013, 2014 Jan Moringen
+;;;; Copyright (C) 2010-2016 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -12,83 +12,69 @@
             :initform nil))
   (:documentation
    "Instances of this class are used in unit tests for hooks which are
-associated to objects."))
+    associated to objects."))
 
-(deftestsuite object-external (root
-                               hook-suite)
-  ((object (make-instance '%hook-object/object-external)))
-  (:teardown
-   (clear-hook (external-hook object 'my-hook)))
-  (:run-setup :once-per-test-case)
-  (:documentation
-   "Tests for object-external hooks."))
+(def-fixture with-external-hook-object ()
+  (let ((object (make-instance '%hook-object/object-external)))
+    (unwind-protect
+         (&body)
+      (clear-hook (external-hook object 'my-hook)))))
 
-(addtest (object-external
-          :documentation
-          "Ensure that retrieving a hook object twice yields `eq'
-results.")
-  retrieval-stability
+(def-suite :hooks.object-external
+  :in :hooks
+  :description
+  "Tests for object-external hooks.")
+(in-suite :hooks.object-external)
 
-  (ensure-same
-   (external-hook object 'my-hook)
-   (external-hook object 'my-hook)
-   :test                    #'eq
-   :ignore-multiple-values? t
-   :report                  "~@<Retrieving hook ~S twice should ~
-yield `eq' results, but did not.~@:>"
-   :arguments               ((external-hook object 'my-hook))))
+(test (retrieval-stability :fixture with-external-hook-object)
+  "Ensure that retrieving a hook object twice yields `eq' results."
 
-(addtest (object-external
-          :documentation
-          "Test readers of object external hooks")
-  readers
+  (is (eq (external-hook object 'my-hook) (external-hook object 'my-hook))
+      "~@<Retrieving hook ~S twice should yield `eq' results, but did
+       not.~@:>"
+      (external-hook object 'my-hook)))
+
+(test (readers :fixture with-external-hook-object)
+  "Test readers of object external hooks."
 
   (exercise-hook-readers (external-hook object 'my-hook)))
 
-(addtest (object-external
-          :documentation
-          "Test writers of object external hooks")
-  writers
+(test (writers :fixture with-external-hook-object)
+  "Test writers of object external hooks."
 
   (exercise-hook-writers (external-hook object 'my-hook)))
 
-(addtest (object-external
-          :documentation
-          "Test adding handlers to object external hooks.")
-  add-to-hook
+(test (add-to-hook :fixture with-external-hook-object)
+  "Test adding handlers to object external hooks."
 
   (let ((hook    (external-hook object 'my-hook))
-        (handler #'(lambda ())))
+        (handler (lambda ())))
     (multiple-value-bind (added-handler present?)
         (add-to-hook hook handler)
-      (ensure-same added-handler handler)
-      (ensure-same (length (hook-handlers hook)) 1 :test #'=)
-      (ensure (not present?)
-              :report "~@<When adding a handler for the first time, the ~
-present? return value should be nil.~@:>"))
+      (is (eq handler added-handler))
+      (is (= 1 (length (hook-handlers hook))))
+      (is-false present?
+                "~@<When adding a handler for the first time, the
+                 present? return value should be nil.~@:>"))
 
     (multiple-value-bind (added-handler present?)
         (add-to-hook hook handler)
-      (ensure-same added-handler handler)
-      (ensure-same (length (hook-handlers hook)) 1 :test #'=)
-      (ensure present?
-              :report "~@<When adding a handler twice with :replace ~
-policy, the present? return value should be non-nil.~@:>"))
+      (is (eq handler added-handler))
+      (is (= 1 (length (hook-handlers hook))))
+      (is-true present?
+               "~@<When adding a handler twice with :replace policy, ~
+                the present? return value should be non-nil.~@:>"))
 
-    (ensure-condition duplicate-handler
-      (add-to-hook hook handler
-                   :duplicate-policy :error))))
+    (signals duplicate-handler
+      (add-to-hook hook handler :duplicate-policy :error))))
 
-(addtest (object-external
-          :documentation
-          "Test clearing object external hooks.")
-  clear-hook
+(test (clear-hook :fixture with-external-hook-object)
+  "Test clearing object external hooks."
 
   (let ((hook (external-hook object 'my-hook)))
     (add-to-hook hook (lambda ()))
     (add-to-hook hook (lambda ()))
 
     (clear-hook hook)
-    (ensure-same (hook-handlers hook) nil
-                 :report "~@<Found remaining handlers after clearing the
-hook.~@:>")))
+    (is (equal '() (hook-handlers hook))
+        "~@<Found remaining handlers after clearing the hook.~@:>")))
