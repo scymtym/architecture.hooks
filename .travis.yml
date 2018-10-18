@@ -13,11 +13,11 @@ install:
   - chmod +x cl
 
   - curl -o quicklisp.lisp "${QUICKLISP_DOWNLOAD_URL}"
-  - ./cl -L quicklisp.lisp '(quicklisp-quickstart:install :path "quicklisp/")'
+  - ./cl -L quicklisp.lisp '(quicklisp-quickstart:install)'
 
 script:
   - ./cl
       -S '(:source-registry (:directory "'$(pwd)'") :ignore-inherited-configuration)'
-      -e '(load "quicklisp/setup.lisp")'
-      -e '(ql:quickload :cl-hooks/test)'
+      -Q
+      -s cl-hooks/test
       '(or (hooks.test:run-tests) (uiop:quit -1))'
